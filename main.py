@@ -31,7 +31,7 @@ def main():
                     print('login não permitido, informações incoretas')
 
         elif escolha == '2':
-            sistema.cadastra_funcionarios(funcionarios)
+            sistema.cadastrar_funcionarios(funcionarios)
         else:
             if escolha.lower() == 'sair':
                 break

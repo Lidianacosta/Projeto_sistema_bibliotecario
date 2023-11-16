@@ -1,4 +1,5 @@
 from src import menus
+from src.models.funcionario import Funcionario
 
 
 def sistema_gerente(gerente, funcionarios):
@@ -48,8 +49,25 @@ def sistema_funcionario(funcionario):
             print('opção invalida')
 
 
-def cadastra_funcionarios(funcionarios):
-    pass
+def cadastrar_funcionarios(funcionarios: list):
+    funcionario = Funcionario()
+    endereco = {}
+
+    funcionario.nome = input('nome: ')
+    funcionario.cpf = input('cpf: ')
+    funcionario.telefone = input('telefone: ')
+    funcionario.nascimento = input('nascimento: ')
+    funcionario.email = input('email: ')
+
+    endereco['estado'] = input('estado: ')
+    endereco['cidade'] = input('cidade: ')
+    endereco['rua'] = input('rua: ')
+    endereco['numero'] = input('numero: ')
+    funcionario.endereco = endereco
+
+    funcionario.senha = input('senha: ')
+
+    funcionarios.append(funcionario)
 
 
 def cadastrar_usuario(usuarios):
