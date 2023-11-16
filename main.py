@@ -33,9 +33,9 @@ def main():
         elif escolha == '2':
             sistema.cadastra_funcionarios(funcionarios)
         else:
+            if escolha.lower() == 'sair':
+                break
             print('opção invalida')
-
-        break
 
 
 def autoriza_login(pessoa, cpf, senha) -> bool:
