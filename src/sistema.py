@@ -1,5 +1,7 @@
+import enum
 from src import menus
 from src.models.funcionario import Funcionario
+from src.models.usuario import Usuario
 
 
 def sistema_gerente(gerente, funcionarios, solicitacoes):
@@ -21,6 +23,22 @@ def sistema_gerente(gerente, funcionarios, solicitacoes):
             break
         else:
             print('opção invalida')
+
+
+def cadastrar_funcionarios(funcionarios: list):
+    funcionario = Funcionario()
+
+    funcionario.nome = input('nome: ')
+    funcionario.cpf = input('cpf: ')
+    funcionario.telefone = input('telefone: ')
+    funcionario.nascimento = input('nascimento: ')
+    funcionario.email = input('email: ')
+    estado = input('estado: ')
+    cidade = input('cidade: ')
+
+    funcionario.senha = input('senha: ')
+
+    funcionarios.append(funcionario)
 
 
 def sistema_funcionario(funcionario):
@@ -50,28 +68,38 @@ def sistema_funcionario(funcionario):
             print('opção invalida')
 
 
-def cadastrar_funcionarios(funcionarios: list):
-    funcionario = Funcionario()
+def cadastrar_usuario(usuarios: list):
+    usuario = Usuario()
 
-    funcionario.nome = input('nome: ')
-    funcionario.cpf = input('cpf: ')
-    funcionario.telefone = input('telefone: ')
-    funcionario.nascimento = input('nascimento: ')
-    funcionario.email = input('email: ')
-    estado = input('estado: ')
-    cidade = input('cidade: ')
+    usuario.nome = input('nome: ')
+    usuario.cpf = input('cpf: ')
+    usuario.telefone = input('telefone: ')
+    usuario.nascimento = input('nascimento: ')
+    usuario.email = input('email: ')
+    print('Endereço')
+    usuario.endereco["estado"] = input('estado')
+    usuario.endereco["cidade"] = input('cidade')
+    usuario.endereco["rua"] = input('rua')
+    usuario.endereco["numero"] = input('numero')
 
-    funcionario.senha = input('senha: ')
+    usuario.senha = input('senha: ')
 
-    funcionarios.append(funcionario)
-
-
-def cadastrar_usuario(usuarios):
-    pass
+    usuarios.append(usuario)
 
 
 def remover_usuario(usuarios):
-    pass
+    index_excluir = None
+    cpf = input('infrome o cpf do usuario: ')
+
+    for pos, u in enumerate(usuarios):
+        if cpf == u.cpf:
+            index_excluir = pos
+
+    escolha = input(
+        f'deseja mesmo remover {usuarios[index_excluir].nome} do sistema?[Sim|não]')
+
+    if escolha.lower() == 'sim':
+        del usuarios[index_excluir]
 
 
 def cadastrar_livro(livros: list):
