@@ -39,7 +39,7 @@ def sistema_funcionario(funcionario):
         elif escolha == '3':
             buscar_livro(livros)
         elif escolha == '4':
-            funcionario.emprestimo()
+            sistema_emprestimo(usuarios, livros)
         elif escolha == '5':
             remover_livro(livros)
         elif escolha == '6':
@@ -52,19 +52,14 @@ def sistema_funcionario(funcionario):
 
 def cadastrar_funcionarios(funcionarios: list):
     funcionario = Funcionario()
-    endereco = {}
 
     funcionario.nome = input('nome: ')
     funcionario.cpf = input('cpf: ')
     funcionario.telefone = input('telefone: ')
     funcionario.nascimento = input('nascimento: ')
     funcionario.email = input('email: ')
-
-    endereco['estado'] = input('estado: ')
-    endereco['cidade'] = input('cidade: ')
-    endereco['rua'] = input('rua: ')
-    endereco['numero'] = input('numero: ')
-    funcionario.endereco = endereco
+    estado = input('estado: ')
+    cidade = input('cidade: ')
 
     funcionario.senha = input('senha: ')
 
@@ -79,16 +74,75 @@ def remover_usuario(usuarios):
     pass
 
 
-def cadastrar_livro(livros):
-    pass
+def cadastrar_livro(livros: list):
+    print('complete os campos de casdastros')
+    livro = {}
+    livro['nome'] = input('nome:')
+    livro['id'] = int(input('id:'))
+    livro['autor'] = input('autor:')
+    livro['editora'] = input('editora:')
+    livro['ano'] = int(input('ano:'))
+
+    livros.append(livro)
 
 
-def remover_livro(livros):
-    pass
+def remover_livro(livros: list):
+    index_excluir = None
+    print('Qual livro deseja remover')
+    if not buscar_livro(livros):
+        return
+
+    excluir_id = int(input('informe o id do livro que deseja remover: '))
+
+    for pos, livro in enumerate(livros):
+        if excluir_id == livro['id']:
+            index_excluir = pos
+
+    if index_excluir is None:
+        print('livro não encontrado')
+        return
+
+    livro_excluir = livros.pop(index_excluir)
+    print(
+        f'Id: {livro_excluir["id"]}',
+        f'Nome: {livro_excluir["nome"]}',
+        f'Autor: {livro_excluir["autor"]}',
+        f'Editora: {livro_excluir["editora"]}',
+        f'Ano: {livro_excluir["ano"]}',
+        sep='\n'
+    )
+    livro_excluir['motivo da exclusão'] = input(
+        'innforme o motivo pela remocão do livro: ')
+
+    # salvar em um arquivo livro_excluir
 
 
-def buscar_livro(livros):
-    pass
+def buscar_livro(livros: list) -> bool:
+    info = input('informacão do livro deseja buscar:')
+    livros_encontrados = []
+
+    for livro in livros:
+        if info in livro.values():
+            livros_encontrados.append(livro)
+
+    if not livros_encontrados:
+        print('Nenhum livro encontrado')
+        return False
+
+    print('livros encontrados:')
+
+    for livro in livros_encontrados:
+        print()
+        print(
+            f'Id: {livro["id"]}',
+            f'Nome: {livro["nome"]}',
+            f'Autor: {livro["autor"]}',
+            f'Editora: {livro["editora"]}',
+            f'Ano: {livro["ano"]}',
+            sep='\n'
+        )
+
+    return True
 
 
 def sistema_emprestimo(usuarios, livros):
