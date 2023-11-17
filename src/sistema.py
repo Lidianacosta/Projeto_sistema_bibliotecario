@@ -2,20 +2,21 @@ from src import menus
 from src.models.funcionario import Funcionario
 
 
-def sistema_gerente(gerente, funcionarios):
-
-    solicitacoes = []
+def sistema_gerente(gerente, funcionarios, solicitacoes):
 
     while True:
         menus.menu_gerente()
         escolha = input('escolha: ')
 
         if escolha == '1':
-            gerente.aprovar(solicitacoes)
+            gerente.aprovar(solicitacoes, funcionarios)
 
         elif escolha == '2':
-            gerente.excluir_funcionario(funcionarios,
-                                        'informação usada para excluir')
+            print('listando funcionarios cadastrados no sistema:')
+            for f in funcionarios:
+                print(f)
+            cpf = input('cpf: ')
+            gerente.excluir_funcionario(funcionarios, cpf)
         elif escolha == '3':
             break
         else:

@@ -5,7 +5,7 @@ from src import sistema
 def main():
 
     funcionarios = []
-
+    solicitacoes = []
     gerente = []
 
     while True:
@@ -18,7 +18,8 @@ def main():
 
             if escolha == '1':
                 if autoriza_login(gerente, cpf, senha):
-                    sistema.sistema_gerente(gerente, funcionarios)
+                    sistema.sistema_gerente(
+                        gerente, funcionarios, solicitacoes)
                 else:
                     print('login não permitido, informações incoretas')
 
