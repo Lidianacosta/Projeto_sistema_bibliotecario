@@ -7,7 +7,7 @@ def menu_login():
 
 def menu_gerente():
     print('\n', '=' * 35, sep='')
-    print(f'{" Menu inicial" :^35}')
+    print(f'{" Menu Do Gerente" :^35}')
     print(' 1 - Ver funcionários esperando aprovação',
           ' 2 - Excluir Funcionario',
           ' 3 - logout',
@@ -18,7 +18,7 @@ def menu_gerente():
 
 def menu_funcionario():
     print('\n', '=' * 35, sep='')
-    print(f'{" Menu inicial" :^35}')
+    print(f'{" Menu Do Funcionário" :^35}')
     print(' 1 - cadastrar usuário',
           ' 2 - cadastrar livro',
           ' 3 - buscar livro',
@@ -33,7 +33,7 @@ def menu_funcionario():
 
 def menu_emprestimos():
     print('\n', '=' * 35, sep='')
-    print(f'{" Menu inicial" :^35}')
+    print(f'{" Menu empréstimos" :^35}')
     print(' 1 - Realizar empréstimos',
           ' 2 - visualizar empréstimos',
           ' 3 - status do empréstimo',

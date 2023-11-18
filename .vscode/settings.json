@@ -1,26 +1,19 @@
 {
     "workbench.colorTheme": "OM Theme (Night Owl Italic)",
     "workbench.iconTheme": "material-icon-theme",
-
     "git.autofetch": true,
-
     "files.autoSave": "off",
     "[python]": {
         "editor.formatOnSave": true,
         "editor.defaultFormatter": "ms-python.autopep8",
     },
-
     "editor.formatOnSave": true,
-
     "explorer.compactFolders": false,
     "editor.wordWrap": "on",
-    
     "code-runner.executorMap": {
         "python": "clear; python -u",
     },
-
     "code-runner.runInTerminal": true,
-
     "python.defaultInterpreterPath": "./venv/bin/python",
     "python.analysis.autoImportCompletions": true,
     "python.analysis.typeCheckingMode": "basic"

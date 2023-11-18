@@ -1,12 +1,13 @@
 from src import menus
-from src import sistema
+from src.models.gerente import Gerente
+from src.models.sistema import Sistema
 
 
 def main():
 
+    sistema = Sistema()
+    gerente = Gerente()
     funcionarios = []
-    solicitacoes = []
-    gerente = []
 
     while True:
         menus.menu_login()
@@ -17,32 +18,25 @@ def main():
             cpf, senha = login()
 
             if escolha == '1':
-                if autoriza_login(gerente, cpf, senha):
-                    sistema.sistema_gerente(
-                        gerente, funcionarios, solicitacoes)
+                if gerente.autoriza_login(cpf, senha):
+                    sistema.sistema_gerente(gerente, funcionarios)
                 else:
                     print('login não permitido, informações incoretas')
 
             else:
                 for f in funcionarios:
-                    if autoriza_login(f, cpf, senha):
+                    if f.autoriza_login(cpf, senha):
                         sistema.sistema_funcionario(f)
                         break
                 else:
                     print('login não permitido, informações incoretas')
 
         elif escolha == '2':
-            sistema.cadastrar_funcionarios(funcionarios)
+            sistema.cadastrar_funcionario()
         else:
             if escolha.lower() == 'sair':
                 break
             print('opção invalida')
-
-
-def autoriza_login(pessoa, cpf, senha) -> bool:
-    if pessoa.cpf == cpf and pessoa.senha == senha:
-        return True
-    return False
 
 
 def login():
@@ -53,4 +47,5 @@ def login():
 
 
 if __name__ == '__main__':
-    main()
+    # main()
+    import src.testes.teste_funcionario
