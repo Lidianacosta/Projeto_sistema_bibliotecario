@@ -16,5 +16,17 @@
     "code-runner.runInTerminal": true,
     "python.defaultInterpreterPath": "./venv/bin/python",
     "python.analysis.autoImportCompletions": true,
-    "python.analysis.typeCheckingMode": "basic"
+    "python.analysis.typeCheckingMode": "basic",
+    "[django-html]": {
+        "editor.quickSuggestions": {
+            "other": true,
+            "comments": true,
+            "strings": true
+        }
+    },
+    "emmet.excludeLanguages": [
+        "markdown",
+        "django-html",
+        "html"
+    ]
 }
