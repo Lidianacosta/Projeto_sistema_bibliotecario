@@ -1,14 +1,20 @@
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from sistema.models import Funcionario
+from django.core.paginator import Paginator
 
 
-def solicitacoes(request):
+def solicitacoes(request, pagina=1):
     solicitacoes = Funcionario.objects.filter(habilitado=False)
 
+    paginator = Paginator(solicitacoes, per_page=5)
+
+    objetos_pagina = paginator.get_page(pagina)
+
     context = {
-        'funcionarios': solicitacoes,
-        'link_template': 'sistema:aprovar'
+        'objetos_pagina': objetos_pagina,
+        'link_views_acao': 'sistema:ver_aprovar',
+        'link_views_origem': 'sistema:solicitacoes'
     }
 
     return render(
@@ -24,7 +30,8 @@ def ver_funcionario_aprovar(request, funcionario_id):
     context = {
         'funcionario': funcionario,
         'link_template_voltar': "sistema:solicitacoes",
-        'acao': "Aprovar"
+        'acao_label': "Aprovar",
+        'acao_link': "sistema:aprovar"
     }
 
     return render(
@@ -35,20 +42,26 @@ def ver_funcionario_aprovar(request, funcionario_id):
 
 
 def aprovar(request, funcionario_id):
-    funcionario = Funcionario.objects.get(pk=funcionario_id)
+    funcionario = get_object_or_404(Funcionario, funcionario_id)
 
-    funcionario.habilitado = True
-    funcionario.save()
+    if request.method == 'POST':
+        funcionario.habilitado = True
+        funcionario.save()
 
-    return
+    return redirect('sistema:solicitacoes')
 
 
-def ver_funcionarios(request):
+def ver_funcionarios(request, pagina=1):
     funcionarios = Funcionario.objects.filter(habilitado=True)
 
+    paginator = Paginator(funcionarios, per_page=5)
+
+    objetos_pagina = paginator.get_page(pagina)
+
     context = {
-        'funcionarios': solicitacoes,
-        'link_template': 'sistema:excluir'
+        'objetos_pagina': objetos_pagina,
+        'link_views_acao': 'sistema:ver_ecluir',
+        'link_views_origem': 'funcionarios'
     }
 
     return render(
@@ -57,13 +70,14 @@ def ver_funcionarios(request):
     )
 
 
-def funcionarios_excluir(request, funcionario_id):
-    funcionario = Funcionario.objects.get(funcionario_id)
+def funcionario_excluir(request, funcionario_id):
+    funcionario = get_object_or_404(Funcionario, funcionario_id)
 
     context = {
         'funcionario': funcionario,
         'link_template_voltar': "sistema:funcionarios",
-        'acao': "Excluir"
+        'acao_label': "Excluir",
+        'acao_link': "sistema:excluir"
     }
 
     return render(
@@ -76,6 +90,7 @@ def funcionarios_excluir(request, funcionario_id):
 def excluir(request, funcionario_id):
     funcionaro = get_object_or_404(Funcionario, funcionario_id)
 
-    funcionaro.delete()
+    if request.method == 'POST':
+        funcionaro.delete()
 
-    # return redirect(reverse())
+    return redirect('sistema:funcionarios')

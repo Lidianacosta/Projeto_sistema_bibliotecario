@@ -8,10 +8,10 @@
 
 
 {% block content %}
-    {% if funcionarios %}
+    {% if objetos_pagina %}
         <h2>Funcionários</h2>
-        {% for funcionario in funcionarios %}
-            <a href={% url link_template funcionario.id%}>
+        {% for funcionario in objetos_pagina %}
+            <a href={% url link_views_acao funcionario.id%}>
                 <h4>Funcionário</h4>
                 <ul>
                     <li>Nome: {{funcionario.nome_completo}}</li>
@@ -22,9 +22,14 @@
                     <li>Estado: {{funcionario.estado}}</li>
                     <li>Cidade: {{funcionario.cidade}}</li>
                 </ul>
-                <br>
             </a>
+                <br>
         {% endfor %}
+
+        {% for numero_pagina in objetos_pagina.paginator.page_range %}
+            <a href="{% url link_views_origem numero_pagina %}">{{numero_pagina}}</a>
+        {% endfor %}
+
     {% else %}
             Nenhum Funcionário Encontrado
     {% endif %}
