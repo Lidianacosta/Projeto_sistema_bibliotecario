@@ -1,0 +1,31 @@
+{% extends "global/base.html" %}
+
+{% block menu %}
+       <a href= "{% url "sistema:solicitacoes"%}" >solicitacoes</a>
+       <a href= "{% url "sistema:funcionarios"%}" >Gerenciar Funcionarios</a>
+       <a href="sistema: login">Logout</a>        
+{% endblock menu %}
+
+
+{% block content %}
+    {% if funcionarios %}
+        <h2>Funcionários</h2>
+        {% for funcionario in funcionarios %}
+            <a href={% url link_template funcionario.id%}>
+                <h4>Funcionário</h4>
+                <ul>
+                    <li>Nome: {{funcionario.nome_completo}}</li>
+                    <li>cpf: {{funcionario.cpf}}</li>
+                    <li>telefone: {{funcionario.telefone}}</li>
+                    <li>E-mail: {{funcionario.email}}</li>
+                    <li>Nascimento: {{funcionario.nascimento}}</li>
+                    <li>Estado: {{funcionario.estado}}</li>
+                    <li>Cidade: {{funcionario.cidade}}</li>
+                </ul>
+                <br>
+            </a>
+        {% endfor %}
+    {% else %}
+            Nenhum Funcionário Encontrado
+    {% endif %}
+{% endblock content %}

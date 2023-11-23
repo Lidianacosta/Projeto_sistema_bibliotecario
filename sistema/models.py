@@ -7,8 +7,7 @@ class Pessoa(models.Model):
     class Meta:  # https://code.djangoproject.com/wiki/ComoHerdarClassesDeModelo
         abstract = True
 
-    first_name = models.CharField(max_length=50, default='')
-    last_name = models.CharField(max_length=50, default='')
+    nome_completo = models.CharField(max_length=50, default='')
     telefone = models.CharField(max_length=50, default='')
     email = models.EmailField(max_length=250, default='')
     senha = models.CharField(max_length=50, default='')
@@ -16,7 +15,7 @@ class Pessoa(models.Model):
     cpf = CPFField('cpf', default='')
 
     def __str__(self) -> str:
-        return f'{self.first_name} {self.last_name}'
+        return f'{self.nome_completo}'
 
 
 class Endereco(models.Model):
@@ -26,8 +25,9 @@ class Endereco(models.Model):
     numero = models.IntegerField(default=0)
 
 
-class Funconario(Pessoa, models.Model):
+class Funcionario(Pessoa, models.Model):
     cidade = models.CharField(max_length=50)
+    habilitado = models.BooleanField(default=False)
     estado = models.CharField(max_length=50)
 
 
@@ -44,11 +44,15 @@ class Gerente(models.Model):
 
 
 class Livro(models.Model):
-    _id = models.IntegerField(default=0)
+    livro_id = models.IntegerField(default=0)
     nome = models.CharField(max_length=50)
     autor = models.CharField(max_length=50)
     editora = models.CharField(max_length=50)
     ano = models.IntegerField(default=0)
+    emprestado = models.BooleanField(default=False)
+
+    def __str__(self) -> str:
+        return f'{self.nome}'
 
 
 class Emprestimo(models.Model):
@@ -57,4 +61,4 @@ class Emprestimo(models.Model):
     livro_info = models.CharField(max_length=50, default='')
     emprestimo_data = models.DateTimeField(default=None)
     status = models.CharField(max_length=50, default='')
-    devolucao_data = models.DateTimeField(default=None)
+    devolucao_data = models.DateTimeField(default=None,)

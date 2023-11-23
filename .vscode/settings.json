@@ -24,9 +24,7 @@
             "strings": true
         }
     },
-    "emmet.excludeLanguages": [
-        "markdown",
-        "django-html",
-        "html"
-    ]
+    "emmet.includeLanguages": {
+        "django-html": "html",
+    }
 }
