@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
-    <link rel="stylesheet" href="{% static "global/base.css" %}">
+    <link rel="stylesheet" href="{% static " global/base.css" %}">
     <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 </head>
 
@@ -14,9 +14,14 @@
     <h1>Sistema Bibliotecário</h1>
     <nav>
         {% block menu %}
-            <a href="{% url "sistema:login" %}">Login</a>
-            <a href={% url "sistema:cadastra_funcionario" %}>Cadastrar Funcionário</a>
+        <a href="{% url "sistema:cadastrar_usuario" %}">cadastrar Usuário</a>
+        <a href="{% url "sistema:cadastrar_livro" %}">cadastrar Livro</a>
+        <a href={% url "sistema:livros_emprestar" %}>Emprétimo</a>
+        <a href={% url "sistema:livros_excluir" %}>Remover Livro</a>
+        <a href="">Remover Usuário</a>
+        <a href="">Logout</a>
         {% endblock menu %}
+        {% block busca %}{% endblock busca %}
     </nav>
 </header>
 
@@ -24,6 +29,7 @@
     <main>
         {% block content %}{% endblock content %}
     </main>
-    
+
 </body>
+
 </html>

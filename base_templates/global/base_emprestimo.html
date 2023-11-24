@@ -14,9 +14,13 @@
     <h1>Sistema Bibliotecário</h1>
     <nav>
         {% block menu %}
-            <a href="{% url "sistema:login" %}">Login</a>
-            <a href={% url "sistema:cadastra_funcionario" %}>Cadastrar Funcionário</a>
-        {% endblock menu %}
+              <a href={% url "sistema:livros_emprestar" %}>Realizar empréstimos</a>
+              <a href="{% url "sistema:ver_emprestimos" %}">Visualizar Empréstimos</a>
+              <a href=''>Status do Empréstimo</a>
+              <a href=''>renovar Empréstimos </a>
+              <a href="{% url "sistema:livros_excluir" %}">Voltar</a>
+       {% endblock menu %}
+       {% block busca %}{% endblock busca %}
     </nav>
 </header>
 
