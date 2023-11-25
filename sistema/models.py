@@ -1,4 +1,3 @@
-from re import T
 from django.db import models
 from cpf_field.models import CPFField  # https://pypi.org/project/django-cpf/
 from django.contrib.auth.models import User
@@ -13,7 +12,7 @@ class Pessoa(models.Model):
     telefone = models.CharField(max_length=50, default='')
     email = models.EmailField(max_length=250, default='')
     senha = models.CharField(max_length=50, default='')
-    nascimento = models.DateField(default=None)
+    nascimento = models.DateField(default=None, null=True)
     cpf = CPFField('cpf', default='')
 
     def __str__(self) -> str:
@@ -37,7 +36,6 @@ class Usuario(Pessoa, models.Model):
     numero = models.IntegerField(default=0)
 
 
-
 class Gerente(models.Model):
     senha = models.CharField(max_length=50)
     cpf = CPFField('cpf')
@@ -59,6 +57,6 @@ class Emprestimo(models.Model):
     user_name = models.CharField(max_length=50)
     user_cpf = CPFField('cpf')
     livro_info = models.ForeignKey(Livro, on_delete=models.CASCADE)
-    emprestimo_data = models.DateTimeField(default=None)
-    status = models.CharField(max_length=50, default='')
-    devolucao_data = models.DateTimeField(default=None,)
+    emprestimo_data = models.DateField(default=None, null=True)
+    # tem que colocar commo em branco
+    devolucao_data = models.DateField(default=None, null=True,)
