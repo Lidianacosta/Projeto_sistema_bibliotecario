@@ -1,9 +1,10 @@
 from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import reverse
 from sistema.models import Funcionario
 from django.core.paginator import Paginator
+from django.contrib.auth.decorators import permission_required
 
 
+# @permission_required('pode aprovar funcionario', login_url='sistema:login')
 def solicitacoes(request, pagina=1):
     solicitacoes = Funcionario.objects.filter(habilitado=False)
 
@@ -23,6 +24,7 @@ def solicitacoes(request, pagina=1):
     )
 
 
+# @permission_required('pode aprovar funcionario', login_url='sistema:login')
 def ver_funcionario_aprovar(request, funcionario_id):
     funcionario = get_object_or_404(
         Funcionario, pk=funcionario_id)
@@ -41,16 +43,25 @@ def ver_funcionario_aprovar(request, funcionario_id):
     )
 
 
+# @permission_required('pode aprovar funcionario', login_url='sistema:login')
 def aprovar(request, funcionario_id):
-    funcionario = get_object_or_404(Funcionario, funcionario_id)
 
     if request.method == 'POST':
+        funcionario = get_object_or_404(Funcionario, funcionario_id)
+        funcionario.user.user_permissions = [
+            'pode fazer emprestimo',
+            'pode cadastrar livro',
+            'pode excluir livro',
+            'pode criar usuario',
+            'pode excluir usuario',
+        ]
         funcionario.habilitado = True
         funcionario.save()
 
     return redirect('sistema:solicitacoes')
 
 
+# @permission_required('pode excluir funcionario', login_url='sistema:login')
 def ver_funcionarios(request, pagina=1):
     funcionarios = Funcionario.objects.filter(habilitado=True)
 
@@ -70,6 +81,7 @@ def ver_funcionarios(request, pagina=1):
     )
 
 
+# @permission_required('pode excluir funcionario', login_url='sistema:login')
 def funcionario_excluir(request, funcionario_id):
     funcionario = get_object_or_404(Funcionario, funcionario_id)
 
@@ -87,10 +99,10 @@ def funcionario_excluir(request, funcionario_id):
     )
 
 
+# @permission_required('pode excluir funcionario', login_url='sistema:login')
 def excluir(request, funcionario_id):
-    funcionaro = get_object_or_404(Funcionario, funcionario_id)
-
     if request.method == 'POST':
+        funcionaro = get_object_or_404(Funcionario, funcionario_id)
         funcionaro.delete()
 
     return redirect('sistema:funcionarios')

@@ -7,6 +7,14 @@
 {% endblock menu %}
 
 
+{% block busca %}
+    <form action="{{busca_action}}" method="get">
+        <input type="text" name="q" id="busca" placeholder="busca"> 
+    </form>
+
+{% endblock busca %}
+
+
 {% block content %}
     {% if objetos_pagina %}
         <h2>Funcionários</h2>

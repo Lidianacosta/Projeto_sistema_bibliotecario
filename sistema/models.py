@@ -37,6 +37,7 @@ class Usuario(Pessoa, models.Model):
     numero = models.IntegerField(default=0)
 
 
+
 class Gerente(models.Model):
     senha = models.CharField(max_length=50)
     cpf = CPFField('cpf')

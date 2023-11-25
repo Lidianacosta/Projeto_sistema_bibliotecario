@@ -6,16 +6,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
-    <link rel="stylesheet" href="{% static "global/base.css" %}">
     <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+    <link rel="stylesheet" href="{% static "global/base.css" %}">
 </head>
 
 <header>
     <h1>Sistema Bibliotecário</h1>
     <nav>
         {% block menu %}
-            <a href="{% url "sistema:login" %}">Login</a>
-            <a href={% url "sistema:cadastra_funcionario" %}>Cadastrar Funcionário</a>
+        <a href="{% url "sistema:login_funcionario" %}">Login Funcionário</a>
+            <a href="{% url "sistema:login_gerente" %}">Login Gerente</a>
+            <a href={% url "sistema:cadastrar_funcionario" %}>Cadastrar Funcionário</a>
         {% endblock menu %}
     </nav>
 </header>
