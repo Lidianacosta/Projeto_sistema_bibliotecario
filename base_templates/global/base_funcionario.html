@@ -6,8 +6,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
-    <link rel="stylesheet" href="{% static " global/base.css" %}">
     <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+    <link rel="stylesheet" href="{% static " global/base.css" %}">
 </head>
 
 <header>
@@ -18,7 +18,7 @@
         <a href="{% url "sistema:cadastrar_livro" %}">cadastrar Livro</a>
         <a href={% url "sistema:livros_emprestar" %}>Emprétimo</a>
         <a href={% url "sistema:livros_excluir" %}>Remover Livro</a>
-        <a href="{% url "sistema:exclui_usuario" %}">Remover Usuário</a>
+        <a href="{% url "sistema:ver_usuarios" %}">Remover Usuário</a>
         <a href="{% url "sistema:logout_funcionario" %}">Logout</a>
         {% endblock menu %}
         {% block busca %}{% endblock busca %}

@@ -1,0 +1,12 @@
+.link {
+    text-decoration: none;
+    color: black;
+}
+
+li {
+    list-style-type: none
+}
+
+a {
+    text-decoration: none;
+}
