@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>{{title}}</title>
     <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
     <link rel="stylesheet" href="{% static "global/base.css" %}">
 </head>
@@ -16,8 +16,8 @@
         {% block menu %}
               <a href={% url "sistema:livros_emprestar" %}>Realizar empréstimos</a>
               <a href="{% url "sistema:ver_emprestimos" %}">Visualizar Empréstimos</a>
-              <a href=''>Status do Empréstimo</a>
-              <a href=''>renovar Empréstimos </a>
+              <a href='{% url "sistema:status_emprestimo" %}'>Status do Empréstimo</a>
+              <a href='{% url "sistema:ver_emprestimo_renovar" %}'>renovar Empréstimos </a>
               <a href="{% url "sistema:livros_excluir" %}">Voltar</a>
        {% endblock menu %}
        {% block busca %}{% endblock busca %}

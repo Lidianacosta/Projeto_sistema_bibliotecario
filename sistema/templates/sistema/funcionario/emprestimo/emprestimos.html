@@ -1,0 +1,77 @@
+{% extends "global/base_emprestimo.html" %}
+
+{% load filtros %}
+
+{% block busca %}
+    <form action="{% url "sistema:busca_emprestimos" %}" method="get">
+        <input type="text" name="q" id="busca">
+    </form>
+{% endblock busca %}
+
+{% block content %}
+    {% if objetos_pagina %}
+        <table>
+
+        <caption>emprestimos</caption>
+        <thead>
+            <tr>
+                <th>Nome usuário</th>
+                <th>Cpf usuário</th>
+                <th>emprestimo data</th>
+                <th>status</th>
+                <th>Data devolucão</th>
+                <th>Livro nome</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+        {% for emprestimo in objetos_pagina %}
+        <tr>    
+            <td>
+                <a href="{% url link_views_acao emprestimo.id %}" class="link" >
+                    {{emprestimo.user_name}}
+                </a>
+            </td>
+            
+            <td>
+                <a href="{% url link_views_acao emprestimo.id %}" class="link" >
+                    {{emprestimo.user_cpf }}
+                </a>
+            </td>
+
+            <td>
+            <a href="{% url link_views_acao emprestimo.id %}" class="link" >
+                {{emprestimo.emprestimo_data }}
+                </a>
+            </td>
+
+            <td>
+            <a href="{% url link_views_acao emprestimo.id %}" class="link" >
+                {{emprestimo|status }}
+                </a>
+            </td>
+            <td>
+            <a href="{% url link_views_acao emprestimo.id %}" class="link" >
+            {{emprestimo.devolucao_data }}
+            </a>
+            </td>
+            <td>
+            <a href="{% url link_views_acao emprestimo.id %}" class="link" >
+            {{emprestimo.livro_info}}
+            </a>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+        
+        </table>
+
+        {% for numero_pagina in objetos_pagina.paginator.page_range %}
+            <a href="{% url link_views_origem numero_pagina %}">{{numero_pagina}}</a>
+        {% endfor %}
+
+    {% else %}
+            Nenhum empréstimo encontrado
+    {% endif %}
+{% endblock content %}
+
