@@ -1,45 +1,29 @@
-{% extends "global/base_funcionario.html" %}
+{% extends "global/base.html" %}
+
+{% block menu %}
+        <a href="{% url link_template_voltar %}">Voltar</a>
+{% endblock menu %}
+
 
 {% block content %}
-       
-       {% if usuarios %}
-        <table>
+        <br><br>        
+        <h3>Funcionário</h3>
+            <ul>
+                <li>Nome: {{usuario.nome_completo}}</li>
+                <li>cpf: {{usuario.cpf}}</li>
+                <li>telefone: {{usuario.telefone}}</li>
+                <li>email: {{usuario.email}}</li>
+                <li>Nascimento: {{usuario.nascimento}}</li>
+                <li>Idade: {{usuario.nascimento}}</li>
+                <li>Estado: {{usuario.estado}}</li>
+                <li>Cidade: {{usuario.cidade}}</li>
+                <li>Instituição: {{usuario.cidade}}</li>
+                <li>Rua: {{usuario.cidade}}</li>
+                <li>Numero: {{usuario.cidade}}</li>
+            </ul> 
 
-            <caption>Usuários</caption>
-            <thead>
-                <tr>
-                    <th>id</th>
-                    <th>Nome Completo</th>
-                    <th>Cpf</th>
-                    <th>Telefone</th>
-                    <th>Email</th>
-                    <th>instituicao</th>
-                   
-                </tr>
-            </thead>
-
-            {% for usuario in usuarios %}
-            <tr>    
-                <td>
-                    <a href="{% url "sistema:login_funcionario" %}" class="link" >
-                        usuario.id
-                    </a>
-                
-                </td>
-                
-                <td>usuario.nome_completo </td>
-                <td>usuario.cpf </td>
-                <td>usuario.telefone </td>
-                <td>usuario.email </td>
-                <td>usuario.instituicao </td>
-			</tr>
-            {% endfor %}
-            
-
-        </table>
-
-        {% else %}
-            Nenhum Usuário Encontrado
-       {% endif %}
-
+        <form action="{% url acao_link usuario.id  %}" method="post">
+                <input type="submit" value={{acao_label}}>
+        </form>
 {% endblock content %}
+

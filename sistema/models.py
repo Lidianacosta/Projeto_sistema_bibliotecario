@@ -12,7 +12,7 @@ class Pessoa(models.Model):
     telefone = models.CharField(max_length=50, default='')
     email = models.EmailField(max_length=250, default='')
     senha = models.CharField(max_length=50, default='')
-    nascimento = models.DateField(default=None, null=True)
+    nascimento = models.DateField(default=None, null=True,)
     cpf = CPFField('cpf', default='')
 
     def __str__(self) -> str:
@@ -58,5 +58,4 @@ class Emprestimo(models.Model):
     user_cpf = CPFField('cpf')
     livro_info = models.ForeignKey(Livro, on_delete=models.CASCADE)
     emprestimo_data = models.DateField(default=None, null=True)
-    # tem que colocar commo em branco
-    devolucao_data = models.DateField(default=None, null=True,)
+    devolucao_data = models.DateField(default=None, null=True, blank=True)

@@ -15,7 +15,9 @@ def solicitacoes(request, pagina=1):
     context = {
         'objetos_pagina': objetos_pagina,
         'link_views_acao': 'sistema:ver_aprovar',
-        'link_views_origem': 'sistema:solicitacoes'
+        'link_views_origem': 'sistema:solicitacoes',
+        'link_base_html': "global/base.html",
+        'tabela_titulo': 'Funcionários'
     }
 
     return render(
@@ -33,7 +35,7 @@ def ver_funcionario_aprovar(request, funcionario_id):
         'funcionario': funcionario,
         'link_template_voltar': "sistema:solicitacoes",
         'acao_label': "Aprovar",
-        'acao_link': "sistema:aprovar"
+        'acao_link': "sistema:aprovar",
     }
 
     return render(
@@ -72,7 +74,9 @@ def ver_funcionarios(request, pagina=1):
     context = {
         'objetos_pagina': objetos_pagina,
         'link_views_acao': 'sistema:ver_ecluir',
-        'link_views_origem': 'funcionarios'
+        'link_views_origem': 'funcionarios',
+        'link_base_html': "global/base.html",
+        'tabela_titulo': 'Funcionários'
     }
 
     return render(

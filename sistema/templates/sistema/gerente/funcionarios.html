@@ -1,25 +1,20 @@
-{% extends "global/base.html" %}
+{% extends link_base_html %}
 
-{% block menu %}
-       <a href= "{% url "sistema:solicitacoes"%}" >solicitacoes</a>
-       <a href= "{% url "sistema:funcionarios"%}" >Gerenciar Funcionarios</a>
-       <a href="{% url "sistema:logout_gerente" %}">Logout</a>        
-{% endblock menu %}
+{% if busca_action %}
+    {% block busca %}
+        <form action="{{busca_action}}" method="get">
+            <input type="text" name="q" id="busca" placeholder="busca"> 
+        </form>
 
-
-{% block busca %}
-    <form action="{{busca_action}}" method="get">
-        <input type="text" name="q" id="busca" placeholder="busca"> 
-    </form>
-
-{% endblock busca %}
+    {% endblock busca %}
+{% endif %}
 
 
 {% block content %}
     {% if objetos_pagina %}
         <table>
 
-            <caption>Funcionários</caption>
+            <caption>{{tabela_titulo}}</caption>
             <thead>
                 <tr>
                     <th>id</th>
@@ -32,39 +27,39 @@
                 </tr>
             </thead>
 
-            {% for funcionario in objetos_pagina %}
+            {% for pessoa in objetos_pagina %}
             <tr>    
                 <td>
-                    <a href="{% url link_views_acao funcionario.id %}" class="link" >
-                        {{funcionario.id}}
+                    <a href="{% url link_views_acao pessoa.id %}" class="link" >
+                        {{pessoa.id}}
                     </a>
                 </td>
                 
                 <td>
-                    <a href="{% url link_views_acao funcionario.id %}" class="link" >
-                {{funcionario.nome_completo }}
+                    <a href="{% url link_views_acao pessoa.id %}" class="link" >
+                {{pessoa.nome_completo }}
                 </a>
                 </td>
 
                 <td>
-                <a href="{% url link_views_acao funcionario.id %}" class="link" >
-                    {{funcionario.cpf }}
+                <a href="{% url link_views_acao pessoa.id %}" class="link" >
+                    {{pessoa.cpf }}
                     </a>
                 </td>
 
                 <td>
-                <a href="{% url link_views_acao funcionario.id %}" class="link" >
-                    {{funcionario.telefone }}
+                <a href="{% url link_views_acao pessoa.id %}" class="link" >
+                    {{pessoa.telefone }}
                     </a>
                 </td>
                 <td>
-                <a href="{% url link_views_acao funcionario.id %}" class="link" >
-                {{funcionario.email }}
+                <a href="{% url link_views_acao pessoa.id %}" class="link" >
+                {{pessoa.email }}
                 </a>
                 </td>
                 <td>
-                <a href="{% url link_views_acao funcionario.id %}" class="link" >
-                {{funcionario.estado }}
+                <a href="{% url link_views_acao pessoa.id %}" class="link" >
+                {{pessoa.estado }}
                 </a>
                 </td>
 			</tr>
@@ -78,6 +73,6 @@
         {% endfor %}
 
     {% else %}
-            Nenhum Funcionário Encontrado
+            Ninguém Encontrado
     {% endif %}
 {% endblock content %}
