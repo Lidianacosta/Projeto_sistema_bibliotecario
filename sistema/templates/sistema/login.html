@@ -1,0 +1,27 @@
+{% extends "global/base.html" %}
+
+ {% block content %}
+    <h4>Login</h4>
+    
+    <form action="{{action_form}}" method="POST">
+        {% csrf_token %}
+        {% for field in form %}
+        <label for={{field.id_for_label}}>{{field.label}}: </label>
+        {{field}}
+        {{field.errors}}
+        {{field.help_text}}
+        {% endfor %}
+        
+        {% if  form.non_field_errors %}
+            {% for error in form.non_field_errors %}
+                  {{error}}
+            {% endfor %}
+        {% endif %}
+        <br><input type="submit" value="Submit">
+    </form>
+
+    {% if criar_gerente %}
+      <br><a href="{% url criar_gerente %}">Criar Conta</a>   
+    {% endif %}
+
+{% endblock content %}

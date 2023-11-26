@@ -1,0 +1,45 @@
+{% extends "global/base_funcionario.html" %}
+
+{% block content %}
+       
+       {% if usuarios %}
+        <table>
+
+            <caption>Usuários</caption>
+            <thead>
+                <tr>
+                    <th>id</th>
+                    <th>Nome Completo</th>
+                    <th>Cpf</th>
+                    <th>Telefone</th>
+                    <th>Email</th>
+                    <th>instituicao</th>
+                   
+                </tr>
+            </thead>
+
+            {% for usuario in usuarios %}
+            <tr>    
+                <td>
+                    <a href="{% url "sistema:login_funcionario" %}" class="link" >
+                        usuario.id
+                    </a>
+                
+                </td>
+                
+                <td>usuario.nome_completo </td>
+                <td>usuario.cpf </td>
+                <td>usuario.telefone </td>
+                <td>usuario.email </td>
+                <td>usuario.instituicao </td>
+			</tr>
+            {% endfor %}
+            
+
+        </table>
+
+        {% else %}
+            Nenhum Usuário Encontrado
+       {% endif %}
+
+{% endblock content %}

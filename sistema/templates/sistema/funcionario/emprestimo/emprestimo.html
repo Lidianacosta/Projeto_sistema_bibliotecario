@@ -1,0 +1,35 @@
+{% extends "global/base_emprestimo.html" %}
+
+
+{% block menu %}
+    <a href="{% url link_voltar %}">Voltar</a>
+{% endblock menu %}
+{% load filtros %}
+
+{% block content %}
+    <h4> Detalhes do Empréstimo:</h4>
+    <ul>
+        <li>User: {{emprestimo.user_name}}</li>
+        <li>Cpf: {{emprestimo.user_cpf}}</li>
+        <li>data emprestimo: {{emprestimo.emprestimo_data}}</li>
+        <li>status: {{emprestimo|status }}</li>
+    </ul>
+    <h5>livro info:</h5>
+    <ul>
+        <li>Nome: {{emprestimo.livro_info.nome}}</li>
+        <li>Id: {{emprestimo.livro_info.livro_id}}</li>
+        <li>Autor: {{emprestimo.livro_info.autor}}</li>
+        <li>Editora: {{emprestimo.livro_info.editora}}</li>
+        <li>Ano: {{emprestimo.livro_info.ano}}</li>
+    </ul>
+
+    {% if link_acao %}
+        <form action="{% url link_acao emprestimo_id %}" method="post">   
+            <input type="button" value="{{acao_label}}">
+        </form>
+
+    {% endif %}
+{% endblock content %}
+
+</body>
+</html>

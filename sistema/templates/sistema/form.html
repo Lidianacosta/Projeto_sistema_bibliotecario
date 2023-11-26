@@ -1,0 +1,32 @@
+{% extends caminho_extender %}
+
+{% block content %}
+
+
+
+<form action="{{action_form}}" method="POST">
+    {% csrf_token %}
+    {% for field in form %}
+    <br>
+    <label for={{field.id_for_label}}>{{field.label}}: </label>
+    {{field}} <br>
+    
+        <div class='list_li'>
+            {{field.help_text}}
+            {{field.errors}}
+        </div>
+            <br>
+         {% endfor %}
+        
+        {% if  form.non_field_errors %}
+            <br>
+            {% for error in form.non_field_errors %}
+                {{error}}
+            {% endfor %}
+            <br>
+        {% endif %}
+
+        <br><input type="submit" value="Submit">
+        </form> 
+
+{% endblock content %}

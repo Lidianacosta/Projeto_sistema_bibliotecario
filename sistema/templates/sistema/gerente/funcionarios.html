@@ -1,0 +1,83 @@
+{% extends "global/base.html" %}
+
+{% block menu %}
+       <a href= "{% url "sistema:solicitacoes"%}" >solicitacoes</a>
+       <a href= "{% url "sistema:funcionarios"%}" >Gerenciar Funcionarios</a>
+       <a href="{% url "sistema:logout_gerente" %}">Logout</a>        
+{% endblock menu %}
+
+
+{% block busca %}
+    <form action="{{busca_action}}" method="get">
+        <input type="text" name="q" id="busca" placeholder="busca"> 
+    </form>
+
+{% endblock busca %}
+
+
+{% block content %}
+    {% if objetos_pagina %}
+        <table>
+
+            <caption>Funcionários</caption>
+            <thead>
+                <tr>
+                    <th>id</th>
+                    <th>Nome Completo</th>
+                    <th>Cpf</th>
+                    <th>Telefone</th>
+                    <th>Email</th>
+                    <th>estado</th>
+                   
+                </tr>
+            </thead>
+
+            {% for funcionario in objetos_pagina %}
+            <tr>    
+                <td>
+                    <a href="{% url link_views_acao funcionario.id %}" class="link" >
+                        {{funcionario.id}}
+                    </a>
+                </td>
+                
+                <td>
+                    <a href="{% url link_views_acao funcionario.id %}" class="link" >
+                {{funcionario.nome_completo }}
+                </a>
+                </td>
+
+                <td>
+                <a href="{% url link_views_acao funcionario.id %}" class="link" >
+                    {{funcionario.cpf }}
+                    </a>
+                </td>
+
+                <td>
+                <a href="{% url link_views_acao funcionario.id %}" class="link" >
+                    {{funcionario.telefone }}
+                    </a>
+                </td>
+                <td>
+                <a href="{% url link_views_acao funcionario.id %}" class="link" >
+                {{funcionario.email }}
+                </a>
+                </td>
+                <td>
+                <a href="{% url link_views_acao funcionario.id %}" class="link" >
+                {{funcionario.estado }}
+                </a>
+                </td>
+			</tr>
+            {% endfor %}
+            
+
+        </table>
+
+        {% for numero_pagina in objetos_pagina.paginator.page_range %}
+            <a href="{% url link_views_origem numero_pagina %}">{{numero_pagina}}</a>
+        {% endfor %}
+
+    {% else %}
+            Nenhum Funcionário Encontrado
+    {% endif %}
+{% endblock content %}
