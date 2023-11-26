@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.db.models import Q
 from django.core.paginator import Paginator
 from datetime import date
-from sistema.models import Emprestimo, Livro
+from sistema.models import Emprestimo, Livro, Usuario
 
 
 def livros_para_empretar(request, pagina=1):
@@ -46,7 +46,7 @@ def buscar_livro_para_emprestar(request, pagina=1):
     objetos_pagina = paginator.get_page(pagina)
     context = {
         'objetos_pagina': objetos_pagina,
-        'link_views_origem': 'sistema:livros_emprestar',
+        'link_views_origem': 'sistema:buscar_livros_emprestar',
         'link_views_acao': 'sistema:ver_livro_emprestar',
         'link_busca': 'sistema:buscar_livros_emprestar',
         'link_base_html': "global/base_emprestimo.html"
@@ -65,11 +65,11 @@ def ver_livro_emprestar(request, livro_id):
     context = {
         'livro': livro,
         'link_view_voltar': 'sistema:livros_emprestar',
-        'acao_label': "realizar empréstimo",
+        'acao_label': "Emprestar",
         'link_acao': 'sistema:excluir',
         'link_busca': 'sistema:buscar_livros_emprestar',
         'link_base_html': "global/base_emprestimo.html",
-        'title': 'emprestar'
+        'title': 'Emprestar'
     }
 
     return render(
@@ -81,13 +81,23 @@ def ver_livro_emprestar(request, livro_id):
 
 def realizar_emprestimo(request, livro_id):
 
-    if request == 'POST':
-        emprestimo = Emprestimo()
-        # falta cpf e user
-        emprestimo.emprestimo_data = date.today()
-        emprestimo.livro_info = livro_id
-        emprestimo.livro_info.emprestado = True
-        emprestimo.save()
+    if request.method == 'POST':
+        cpf = request.POST.get('cpf', '')
+        usuario = Usuario.objects.filter(cpf=cpf)
+        if not usuario:
+            return redirect('sistema:ver_livro_emprestar')
+
+        senha = request.POST.get('cpf', '')
+
+        if usuario.senha == senha:
+
+            emprestimo = Emprestimo()
+            emprestimo.user_cpf = cpf
+            emprestimo.user_name = usuario.nome
+            emprestimo.emprestimo_data = date.today()
+            emprestimo.livro_info = livro_id
+            emprestimo.livro_info.emprestado = True
+            emprestimo.save()
 
     return redirect('sistema:ver_livro_emprestar')
 
@@ -143,6 +153,7 @@ def ver_emprestimo(request, emprestimo_id):
     context = {
         'emprestimo': emprestimo,
         'link_voltar': 'sistema:ver_emprestimos',
+        'title': 'emprestimo'
     }
 
     return render(
@@ -200,7 +211,7 @@ def ver_status_emprestimo(request, emprestimo_id):
 
     context = {
         'emprestimo': emprestimo,
-        'link_voltar': 'sistema:ver_status_emprestimo',
+        'link_voltar': 'sistema:status_emprestimo',
         'link_acao': 'sistema:devolver_livro',
         'acao_label': 'Devolver'
     }
@@ -230,8 +241,8 @@ def ver_emprestimo_renovar(request, pagina=1):
     objetos_pagina = paginator.get_page(pagina)
     context = {
         'objetos_pagina': objetos_pagina,
-        'link_views_acao': 'sistema:ver_status_emprestimo',
-        'link_views_origem': 'sistema:status_emprestimo',
+        'link_views_acao': 'sistema:ver_revovar_emprestimo',
+        'link_views_origem': 'sistema:ver_emprestimo_renovar',
     }
 
     return render(
@@ -297,4 +308,4 @@ def renovar_emprestimo(request, emprestimo_id):
         )
         novo_emprestimo.save()
 
-    return redirect('sistema:emprestimos')
+    return redirect('sistema:ver_emprestimo_renovar')

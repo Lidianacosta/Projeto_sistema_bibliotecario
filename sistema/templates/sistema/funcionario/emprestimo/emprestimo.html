@@ -24,7 +24,7 @@
     </ul>
 
     {% if link_acao %}
-        <form action="{% url link_acao emprestimo_id %}" method="post">   
+        <form action="{% url link_acao emprestimo.id %}" method="post">   
             <input type="button" value="{{acao_label}}">
         </form>
 

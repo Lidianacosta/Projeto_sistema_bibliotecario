@@ -46,7 +46,7 @@ def buscar_livro_para_excluir(request, pagina=1):
     context = {
         'objetos_pagina': objetos_pagina,
         'link_views_acao': 'sistema:ver_livro_excluir',
-        'link_views_origem': "sistema:livros_excluir",
+        'link_views_origem': "sistema:buscar_livros_excluir",
         'link_busca': 'sistema:buscar_livros_excluir',
         'link_base_html': "global/base_funcionario.html"
     }
@@ -80,14 +80,56 @@ def excluir_livro(request, livro_id):
     if request.method == 'POST':
         livro = get_object_or_404(Livro, pk=livro_id)
         livro.delete()
+    return redirect('sistema:livros_excluir')
 
 
-def ver_usuarios(request):
+def ver_usuarios(request, pagina=1):
+    usuarios = Usuario.objects.all()
+
+    paginator = Paginator(usuarios, per_page=5)
+
+    objetos_pagina = paginator.get_page(pagina)
+
+    context = {
+        'objetos_pagina': objetos_pagina,
+        'link_views_acao': 'sistema:ver_usuario',
+        'link_views_origem': 'sistema:ver_usuarios',
+        'link_base_html': "global/base_funcionario.html",
+        'tabela_titulo': 'Usuários',
+        'busca_action': 'sistema:busca_usuario'
+    }
+
     return render(
         request,
-        'sistema/funcionario/usuario.html',
+        'sistema/gerente/funcionarios.html',
+        context=context
     )
 
 
-def ver_usuario():
-    pass
+# @permission_required('pode aprovar funcionario', login_url='sistema:login')
+def ver_usuario(request, usuario_id):
+    usuario = get_object_or_404(
+        Usuario, pk=usuario_id)
+
+    context = {
+        'usuario': usuario,
+        'link_template_voltar': "sistema:ver_usuarios",
+        'acao_label': "Excluir",
+        'acao_link': "sistema:deletar_usuario",
+    }
+
+    return render(
+        request,
+        'sistema/funcionario/usuario.html',
+        context=context
+    )
+
+
+# @permission_required()
+def deletar_usuario(request, usuario_id):
+
+    if request.method == 'POST':
+        usuario = get_object_or_404(Usuario, usuario_id)
+        usuario.delete()
+
+    return redirect('sistema:solicitacoes')

@@ -8,16 +8,16 @@
 {% block content %}
         <br><br>        
         <h3>Funcionário</h3>
+        <ul>
+                <li>Nome: {{funcionario.nome_completo}}</li>
+                <li>cpf: {{funcionario.cpf}}</li>
+                <li>telefone: {{funcionario.telefone}}</li>
+                <li>email: {{funcionario.email}}</li>
+                <li>Nascimento: {{funcionario.nascimento}}</li>
+                <li>Estado: {{funcionario.estado}}</li>
+                <li>Cidade: {{funcionario.cidade}}</li>
+        </ul> 
         <form action="{% url acao_link funcionario.id  %}" method="post">
-                <ul>
-                        <li>Nome: {{funcionario.nome_completo}}</li>
-                        <li>cpf: {{funcionario.cpf}}</li>
-                        <li>telefone: {{funcionario.telefone}}</li>
-                        <li>email: {{funcionario.email}}</li>
-                        <li>Nascimento: {{funcionario.nascimento}}</li>
-                        <li>Estado: {{funcionario.estado}}</li>
-                        <li>Cidade: {{funcionario.cidade}}</li>
-                </ul> 
                 <input type="submit" value={{acao_label}}>
         </form>
 {% endblock content %}
