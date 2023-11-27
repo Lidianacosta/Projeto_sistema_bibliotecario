@@ -8,10 +8,10 @@ register = template.Library()
 @register.filter('status')
 def calcula_status(emprestimo):
 
-    dias_emprestado = (date.today() - emprestimo.emprestimo_data).days
-
-    if dias_emprestado:
+    if emprestimo.devolucao_data:
         return 'entregue'
+
+    dias_emprestado = (date.today() - emprestimo.emprestimo_data).days
 
     if dias_emprestado <= 8:
         return 'ativo'
