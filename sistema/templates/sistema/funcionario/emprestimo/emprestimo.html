@@ -23,9 +23,10 @@
         <li>Ano: {{emprestimo.livro_info.ano}}</li>
     </ul>
 
-    {% if link_acao %}
-        <form action="{% url link_acao emprestimo.id %}" method="post">   
-            <input type="button" value="{{acao_label}}">
+    {% if link_acao and not emprestimo.devolucao_data%}
+        <form action="{% url link_acao emprestimo.id %}" method="post">
+            {% csrf_token %}
+            <input type="submit" value="{{acao_label}}">
         </form>
 
     {% endif %}

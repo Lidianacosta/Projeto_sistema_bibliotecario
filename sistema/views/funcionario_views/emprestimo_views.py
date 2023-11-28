@@ -7,7 +7,7 @@ from sistema.models import Emprestimo, Livro, Usuario
 
 def livros_para_empretar(request, pagina=1):
     livros = Livro.objects.filter(
-        emprestado=False)
+        emprestado=False).order_by('nome')
 
     paginator = Paginator(livros, per_page=5)
     objetos_pagina = paginator.get_page(pagina)
@@ -40,7 +40,7 @@ def buscar_livro_para_emprestar(request, pagina=1):
             Q(autor__icontains=buscado) |
             Q(editora__icontains=buscado) |
             Q(ano__icontains=buscado)
-        )
+        ).order_by('nome')
 
     paginator = Paginator(livros, per_page=5)
     objetos_pagina = paginator.get_page(pagina)
@@ -66,7 +66,7 @@ def ver_livro_emprestar(request, livro_id):
         'livro': livro,
         'link_view_voltar': 'sistema:livros_emprestar',
         'acao_label': "Emprestar",
-        'link_acao': 'sistema:excluir',
+        'link_acao': 'sistema:emprestar',
         'link_busca': 'sistema:buscar_livros_emprestar',
         'link_base_html': "global/base_emprestimo.html",
         'title': 'Emprestar'
@@ -83,29 +83,27 @@ def realizar_emprestimo(request, livro_id):
 
     if request.method == 'POST':
         cpf = request.POST.get('cpf', '')
-        usuario = Usuario.objects.filter(cpf=cpf)
+        senha = request.POST.get('senha', '')
+        usuario = Usuario.objects.filter(cpf=cpf, senha=senha)[0]
+
         if not usuario:
             return redirect('sistema:ver_livro_emprestar')
 
-        senha = request.POST.get('cpf', '')
+        emprestimo = Emprestimo()
+        emprestimo.user_cpf = cpf
+        emprestimo.user_name = usuario.nome_completo
+        emprestimo.emprestimo_data = date.today()
+        emprestimo.livro_info = get_object_or_404(Livro, pk=livro_id)
+        emprestimo.livro_info.emprestado = True
+        emprestimo.save()
 
-        if usuario.senha == senha:
-
-            emprestimo = Emprestimo()
-            emprestimo.user_cpf = cpf
-            emprestimo.user_name = usuario.nome
-            emprestimo.emprestimo_data = date.today()
-            emprestimo.livro_info = livro_id
-            emprestimo.livro_info.emprestado = True
-            emprestimo.save()
-
-    return redirect('sistema:ver_livro_emprestar')
+    return redirect('sistema:livros_emprestar')
 
 # emprestimo
 
 
 def emprestimos(request, pagina=1):
-    emprestimos_objetos = Emprestimo.objects.all()
+    emprestimos_objetos = Emprestimo.objects.all().order_by()
 
     paginator = Paginator(emprestimos_objetos, per_page=5)
     objetos_pagina = paginator.get_page(pagina)
@@ -231,7 +229,7 @@ def devolver_livro(request, emprestimo_id):
         emprestimo.livro_info.emprestado = False
         emprestimo.save()
 
-    return redirect('sistema:emprestimos')
+    return redirect('sistema:status_emprestimo')
 
 
 def ver_emprestimo_renovar(request, pagina=1):

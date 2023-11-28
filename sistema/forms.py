@@ -4,6 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from sistema.models import Funcionario, Livro, Usuario
 from cpf_field.models import CPFField
+import re
 
 
 class GerenteForm(UserCreationForm):
@@ -57,19 +58,19 @@ class FuncionarioForm(forms.ModelForm):
     def clean(self):
         cleaned_data = self.cleaned_data
 
-        self.add_error(
-            'nome_completo',
-            ValidationError(
-                'mesagem de error 2',
-                code='invalid'
-            )
-        )
-        self.add_error(
-            'nome_completo',
-            ValidationError(
-                message='mesagem de error',
-            )
-        )
+        # self.add_error(
+        #     'nome_completo',
+        #     ValidationError(
+        #         'mesagem de error 2',
+        #         code='invalid'
+        #     )
+        # )
+        # self.add_error(
+        #     'nome_completo',
+        #     ValidationError(
+        #         message='mesagem de error',
+        #     )
+        # )
 
         return super().clean()
 

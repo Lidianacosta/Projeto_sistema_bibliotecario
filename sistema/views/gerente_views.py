@@ -16,7 +16,7 @@ def solicitacoes(request, pagina=1):
         'objetos_pagina': objetos_pagina,
         'link_views_acao': 'sistema:ver_aprovar',
         'link_views_origem': 'sistema:solicitacoes',
-        'link_base_html': "global/base.html",
+        'link_base_html': "global/base_gerente.html",
         'tabela_titulo': 'Funcionários'
     }
 
@@ -75,7 +75,7 @@ def ver_funcionarios(request, pagina=1):
         'objetos_pagina': objetos_pagina,
         'link_views_acao': 'sistema:ver_ecluir',
         'link_views_origem': 'funcionarios',
-        'link_base_html': "global/base.html",
+        'link_base_html': "global/base_gerente.html",
         'tabela_titulo': 'Funcionários'
     }
 
