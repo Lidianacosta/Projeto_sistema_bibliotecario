@@ -41,7 +41,7 @@ def login_funcionario(request):
 
     context = {
         'form': form,
-        'action_form': 'sistema:login',
+        'action_form': 'sistema:login_funcionario',
         'caminho_extender': "global/base.html",
         'criar_gerente': 'sistema:cadastrar_funcionario'
     }
@@ -66,7 +66,7 @@ def login_gerente(request):
 
     context = {
         'form': form,
-        'action_form': 'sistema:login',
+        'action_form': 'sistema:login_gerente',
         'caminho_extender': "global/base.html",
         'criar_gerente': 'sistema:cadastrar_gerente'
     }

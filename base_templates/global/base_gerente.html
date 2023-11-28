@@ -1,0 +1,31 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+    <link rel="stylesheet" href="{% static "global/base.css" %}">
+</head>
+
+<header>
+    <h1>Sistema Bibliotecário</h1>
+    <nav>
+        {% block menu %}
+        <a href="{% url "sistema:solicitacoes" %}">Solicitações</a>
+        <a href="{% url "sistema:funcionarios" %}">Funcionários</a>
+        <a href="{% url "sistema:logout_gerente" %}">Logout</a>
+        {% endblock menu %}
+    </nav>
+</header>
+
+<body>
+    <main>
+        {% block content %}{% endblock content %}
+    </main>
+
+</body>
+
+</html>

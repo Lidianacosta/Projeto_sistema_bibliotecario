@@ -3,7 +3,7 @@
 
 {% block busca %}
     <form action="{% url link_busca %}" method="get">
-        <input type="text" name="q" id="busca">
+        <input type="text" name="q" id="busca" placeholder='buscar livro'autofocus>
     </form>
 {% endblock busca %}
 
@@ -19,7 +19,7 @@
                     <th>Autor</th>
                     <th>Editora</th>
                     <th>Ano</th>
-                    <th>Emprestado</th>
+                    <th>situação</th>
                    
                 </tr>
             </thead>
@@ -56,7 +56,11 @@
                 </td>
                 <td>
                 <a href="{% url link_views_acao livro.id %}" class="link" >
-                {{livro.emprestado }}
+                    {% if livro.emprestado %}
+                        Emprestado
+                    {% else %}
+                        Disponível
+                    {% endif %}
                 </a>
                 </td>
 			</tr>

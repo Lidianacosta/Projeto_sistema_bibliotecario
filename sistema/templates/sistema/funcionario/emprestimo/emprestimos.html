@@ -4,7 +4,7 @@
 
 {% block busca %}
     <form action="{% url "sistema:busca_emprestimos" %}" method="get">
-        <input type="text" name="q" id="busca">
+        <input type="text" name="q" id="busca" placeholder='buscar emprestimo' autofocus >
     </form>
 {% endblock busca %}
 
