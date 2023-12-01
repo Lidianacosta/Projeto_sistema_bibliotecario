@@ -3,7 +3,7 @@
 
 {% block busca %}
     <form action="{% url link_busca %}" method="get">
-        <input type="text" name="q" id="busca" placeholder='buscar livro'autofocus>
+        <input type="text" name="q" id="busca" placeholder='buscar livro' autofocus value={{request.GET.q}}>
     </form>
 {% endblock busca %}
 
@@ -20,7 +20,7 @@
                     <th>Editora</th>
                     <th>Ano</th>
                     <th>situação</th>
-                   
+
                 </tr>
             </thead>
         <tbody>
@@ -31,7 +31,7 @@
                         {{livro.livro_id}}
                     </a>
                 </td>
-                
+
                 <td>
                     <a href="{% url link_views_acao livro.id %}" class="link" >
                         {{livro.nome }}
@@ -63,10 +63,10 @@
                     {% endif %}
                 </a>
                 </td>
-			</tr>
+      </tr>
         {% endfor %}
         </tbody>
-            
+
         </table>
 
             {% for numero_pagina in objetos_pagina.paginator.page_range %}

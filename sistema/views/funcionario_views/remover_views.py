@@ -6,7 +6,7 @@ from sistema.models import Livro, Usuario
 
 def livros_para_excluir(request, pagina=1):
     livros = Livro.objects\
-        .filter(emprestado=False)
+        .filter(emprestado=False).order_by('nome')
 
     paginator = Paginator(livros, per_page=5)
     objetos_pagina = paginator.get_page(pagina)
@@ -39,7 +39,7 @@ def buscar_livro_para_excluir(request, pagina=1):
             Q(autor__icontains=buscado) |
             Q(editora__icontains=buscado) |
             Q(ano__icontains=buscado)
-        )
+        ).order_by("nome")
 
     paginator = Paginator(livros, per_page=5)
     objetos_pagina = paginator.get_page(pagina)
@@ -84,7 +84,7 @@ def excluir_livro(request, livro_id):
 
 
 def ver_usuarios(request, pagina=1):
-    usuarios = Usuario.objects.all()
+    usuarios = Usuario.objects.all().order_by('nome_completo')
 
     paginator = Paginator(usuarios, per_page=5)
 
@@ -129,7 +129,7 @@ def ver_usuario(request, usuario_id):
 def deletar_usuario(request, usuario_id):
 
     if request.method == 'POST':
-        usuario = get_object_or_404(Usuario, usuario_id)
+        usuario = get_object_or_404(Usuario, pk=usuario_id)
         usuario.delete()
 
-    return redirect('sistema:solicitacoes')
+    return redirect('sistema:ver_usuarios')

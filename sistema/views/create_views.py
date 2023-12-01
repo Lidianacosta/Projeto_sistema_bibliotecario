@@ -27,7 +27,6 @@ def cadastrar_usuario(request):
 
 def cadastrar_livro(request):
     form = LivroForm()
-
     if request.method == 'POST':
         form = LivroForm(request.POST)
         if form.is_valid():

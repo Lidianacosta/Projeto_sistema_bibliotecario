@@ -3,7 +3,6 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from sistema.models import Funcionario, Livro, Usuario
-from cpf_field.models import CPFField
 import re
 
 

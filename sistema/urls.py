@@ -17,21 +17,25 @@ urlpatterns = [
     path('logout-gerente/', views.logout_funcionario, name='logout_funcionario'),
 
     # Gerente
-    path('gerente/solicitacoes/<int:pagina>/',
+    path('gerente/solicitacoes/<int:pagina>/page',
          views.solicitacoes, name='solicitacoes'),
     path('gerente/solicitacoes/', views.solicitacoes, name='solicitacoes'),
 
     path('gerente/<int:funcionario_id>/aprovar/',
          views.ver_funcionario_aprovar, name='ver_aprovar'),
+
     path('gerente/solicitacoes/<int:funcionario_id>/aprovar/',
-         views.ver_funcionario_aprovar, name='aprovar'),
+         views.aprovar, name='aprovar'),
 
     path('gerente/funcionarios/<int:pagina>/',
          views.ver_funcionarios, name='funcionarios'),
+
     path('gerente/funcionarios/', views.ver_funcionarios,
          name='funcionarios'),
+
     path('gerente/<int:funcionario_id>/excluir/',
          views.funcionario_excluir, name='ver_excluir'),
+
     path('gerente/funcionarios/<int:funcionario_id>/excluir/',
          views.funcionario_excluir, name='excluir'),
 
@@ -150,8 +154,10 @@ urlpatterns = [
     path('cadastra-livro/',
          views.cadastrar_livro, name='cadastrar_livro'),
 
-    path('delete/usuario', views.ver_usuarios, name='ver_usuarios'),
-    path('delete/usuario/<int:usuario_id>/',
+    path('ver-usuarios/', views.ver_usuarios, name='ver_usuarios'),
+    path('ver-usuarios/<int:pagina>/', views.ver_usuarios, name='ver_usuarios'),
+    path('ver-usuario/<int:usuario_id>/',
          views.ver_usuario, name='ver_usuario'),
-    path('delete/usuario', views.deletar_usuario, name='deletar_usuario'),
+    path('delete/usuario/<int:usuario_id>/',
+         views.deletar_usuario, name='deletar_usuario'),
 ]

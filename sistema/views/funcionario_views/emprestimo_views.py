@@ -6,8 +6,7 @@ from sistema.models import Emprestimo, Livro, Usuario
 
 
 def livros_para_empretar(request, pagina=1):
-    livros = Livro.objects.filter(
-        emprestado=False).order_by('nome')
+    livros = Livro.objects.filter(emprestado=False).order_by('nome')
 
     paginator = Paginator(livros, per_page=5)
     objetos_pagina = paginator.get_page(pagina)
@@ -19,11 +18,7 @@ def livros_para_empretar(request, pagina=1):
         'link_base_html': "global/base_emprestimo.html"
     }
 
-    return render(
-        request,
-        "sistema/funcionario/livros.html",
-        context=context
-    )
+    return render(request, "sistema/funcionario/livros.html", context=context)
 
 
 def buscar_livro_para_emprestar(request, pagina=1):
@@ -52,11 +47,7 @@ def buscar_livro_para_emprestar(request, pagina=1):
         'link_base_html': "global/base_emprestimo.html"
     }
 
-    return render(
-        request,
-        "sistema/funcionario/livros.html",
-        context=context
-    )
+    return render(request, "sistema/funcionario/livros.html", context=context)
 
 
 def ver_livro_emprestar(request, livro_id):
@@ -67,16 +58,13 @@ def ver_livro_emprestar(request, livro_id):
         'link_view_voltar': 'sistema:livros_emprestar',
         'acao_label': "Emprestar",
         'link_acao': 'sistema:emprestar',
-        'link_busca': 'sistema:buscar_livros_emprestar',
         'link_base_html': "global/base_emprestimo.html",
         'title': 'Emprestar'
     }
 
-    return render(
-        request,
-        "sistema/funcionario/acao_livro.html",
-        context=context
-    )
+    return render(request,
+                  "sistema/funcionario/acao_livro.html",
+                  context=context)
 
 
 def realizar_emprestimo(request, livro_id):
@@ -84,7 +72,8 @@ def realizar_emprestimo(request, livro_id):
     if request.method == 'POST':
         cpf = request.POST.get('cpf', '')
         senha = request.POST.get('senha', '')
-        usuario = Usuario.objects.filter(cpf=cpf, senha=senha)[0]
+        usuario = Usuario.objects.filter(
+            cpf__iexact=cpf, senha__iexact=senha)[0]
 
         if not usuario:
             return redirect('sistema:ver_livro_emprestar')
@@ -95,15 +84,18 @@ def realizar_emprestimo(request, livro_id):
         emprestimo.emprestimo_data = date.today()
         emprestimo.livro_info = get_object_or_404(Livro, pk=livro_id)
         emprestimo.livro_info.emprestado = True
+        emprestimo.livro_info.save()
         emprestimo.save()
 
     return redirect('sistema:livros_emprestar')
+
 
 # emprestimo
 
 
 def emprestimos(request, pagina=1):
-    emprestimos_objetos = Emprestimo.objects.all().order_by()
+    emprestimos_objetos = Emprestimo.objects \
+        .exclude(devolucao_data=None)
 
     paginator = Paginator(emprestimos_objetos, per_page=5)
     objetos_pagina = paginator.get_page(pagina)
@@ -113,21 +105,19 @@ def emprestimos(request, pagina=1):
         'link_views_origem': 'sistema:ver_emprestimos',
     }
 
-    return render(
-        request,
-        "sistema/funcionario/emprestimo/emprestimos.html",
-        context=context
-    )
+    return render(request,
+                  "sistema/funcionario/emprestimo/emprestimos.html",
+                  context=context)
 
 
 def buscar_emprestimos(request, pagina=1):
     buscado = request.GET.get('q', '').strip()
     emprestimos_objetos = Emprestimo.objects\
+        .exclude(devolucao_data=None) \
         .filter(
             Q(user_name__icontains=buscado) |
             Q(user_cpf__icontains=buscado) |
-            Q(emprestimo_data__icontains=buscado) |
-            Q(devolucao_data__icontains=buscado)
+            Q(emprestimo_data__icontains=buscado)
         )
 
     paginator = Paginator(emprestimos_objetos, per_page=5)
@@ -138,11 +128,9 @@ def buscar_emprestimos(request, pagina=1):
         'link_views_origem': 'sistema:busca_emprestimos'
     }
 
-    return render(
-        request,
-        "sistema/funcionario/emprestimo/emprestimos.html",
-        context=context
-    )
+    return render(request,
+                  "sistema/funcionario/emprestimo/emprestimos.html",
+                  context=context)
 
 
 def ver_emprestimo(request, emprestimo_id):
@@ -154,15 +142,14 @@ def ver_emprestimo(request, emprestimo_id):
         'title': 'emprestimo'
     }
 
-    return render(
-        request,
-        "sistema/funcionario/emprestimo/emprestimo.html",
-        context=context
-    )
+    return render(request,
+                  "sistema/funcionario/emprestimo/emprestimo.html",
+                  context=context)
 
 
 def status_emprestimo(request, pagina=1):
-    emprestimos_objetos = Emprestimo.objects.all()
+    emprestimos_objetos = Emprestimo.objects\
+        .filter(devolucao_data=None)
 
     paginator = Paginator(emprestimos_objetos, per_page=5)
     objetos_pagina = paginator.get_page(pagina)
@@ -172,16 +159,15 @@ def status_emprestimo(request, pagina=1):
         'link_views_origem': 'sistema:status_emprestimo',
     }
 
-    return render(
-        request,
-        "sistema/funcionario/emprestimo/emprestimos.html",
-        context=context
-    )
+    return render(request,
+                  "sistema/funcionario/emprestimo/emprestimos.html",
+                  context=context)
 
 
 def buscar_status_emprestimo(request, pagina=1):
     buscado = request.GET.get('q', '').strip()
     emprestimos_objetos = Emprestimo.objects\
+        .filter(devolucao_data=None) \
         .filter(
             Q(user_name__icontains=buscado) |
             Q(user_cpf__icontains=buscado) |
@@ -197,11 +183,9 @@ def buscar_status_emprestimo(request, pagina=1):
         'link_views_origem': 'sistema:buscar_status_emprestimo'
     }
 
-    return render(
-        request,
-        "sistema/funcionario/emprestimo/emprestimos.html",
-        context=context
-    )
+    return render(request,
+                  "sistema/funcionario/emprestimo/emprestimos.html",
+                  context=context)
 
 
 def ver_status_emprestimo(request, emprestimo_id):
@@ -214,11 +198,9 @@ def ver_status_emprestimo(request, emprestimo_id):
         'acao_label': 'Devolver'
     }
 
-    return render(
-        request,
-        "sistema/funcionario/emprestimo/emprestimo.html",
-        context=context
-    )
+    return render(request,
+                  "sistema/funcionario/emprestimo/emprestimo.html",
+                  context=context)
 
 
 def devolver_livro(request, emprestimo_id):
@@ -227,13 +209,15 @@ def devolver_livro(request, emprestimo_id):
 
         emprestimo.devolucao_data = date.today()
         emprestimo.livro_info.emprestado = False
+        emprestimo.livro_info.save()
         emprestimo.save()
 
     return redirect('sistema:status_emprestimo')
 
 
 def ver_emprestimo_renovar(request, pagina=1):
-    emprestimos_objetos = Emprestimo.objects.all()
+    emprestimos_objetos = Emprestimo.objects \
+        .filter(devolucao_data=None)
 
     paginator = Paginator(emprestimos_objetos, per_page=5)
     objetos_pagina = paginator.get_page(pagina)
@@ -243,16 +227,15 @@ def ver_emprestimo_renovar(request, pagina=1):
         'link_views_origem': 'sistema:ver_emprestimo_renovar',
     }
 
-    return render(
-        request,
-        "sistema/funcionario/emprestimo/emprestimos.html",
-        context=context
-    )
+    return render(request,
+                  "sistema/funcionario/emprestimo/emprestimos.html",
+                  context=context)
 
 
 def buscar_emprestimo_renovar(request, pagina=1):
     buscado = request.GET.get('q', '').strip()
     emprestimos_objetos = Emprestimo.objects\
+        .filter(devolucao_data=None) \
         .filter(
             Q(user_name__icontains=buscado) |
             Q(user_cpf__icontains=buscado) |
@@ -268,11 +251,9 @@ def buscar_emprestimo_renovar(request, pagina=1):
         'link_views_origem': 'sistema:buscar_emprestimo_renovar'
     }
 
-    return render(
-        request,
-        "sistema/funcionario/emprestimo/emprestimos.html",
-        context=context
-    )
+    return render(request,
+                  "sistema/funcionario/emprestimo/emprestimos.html",
+                  context=context)
 
 
 def ver_revovar_emprestimo(request, emprestimo_id):
@@ -285,11 +266,9 @@ def ver_revovar_emprestimo(request, emprestimo_id):
         'acao_label': 'Renovar'
     }
 
-    return render(
-        request,
-        "sistema/funcionario/emprestimo/emprestimo.html",
-        context=context
-    )
+    return render(request,
+                  "sistema/funcionario/emprestimo/emprestimo.html",
+                  context=context)
 
 
 def renovar_emprestimo(request, emprestimo_id):

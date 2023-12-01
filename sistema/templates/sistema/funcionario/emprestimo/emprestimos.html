@@ -21,7 +21,7 @@
                 <th>status</th>
                 <th>Data devolucão</th>
                 <th>Livro nome</th>
-                
+
             </tr>
         </thead>
         <tbody>
@@ -32,7 +32,7 @@
                     {{emprestimo.user_name}}
                 </a>
             </td>
-            
+
             <td>
                 <a href="{% url link_views_acao emprestimo.id %}" class="link" >
                     {{emprestimo.user_cpf }}
@@ -63,7 +63,7 @@
         </tr>
         {% endfor %}
         </tbody>
-        
+
         </table>
 
         {% for numero_pagina in objetos_pagina.paginator.page_range %}
@@ -74,4 +74,3 @@
             Nenhum empréstimo encontrado
     {% endif %}
 {% endblock content %}
-
