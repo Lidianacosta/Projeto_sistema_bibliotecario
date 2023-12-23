@@ -9,7 +9,7 @@
 {% endblock busca %}
 
 {% block content %}
-    {% if objetos_pagina %}
+    {% if page_obj %}
         <table>
 
         <caption>emprestimos</caption>
@@ -25,7 +25,7 @@
             </tr>
         </thead>
         <tbody>
-        {% for emprestimo in objetos_pagina %}
+        {% for emprestimo in page_obj %}
         <tr>    
             <td>
                 <a href="{% url link_views_acao emprestimo.id %}" class="link" >
@@ -65,10 +65,6 @@
         </tbody>
 
         </table>
-
-        {% for numero_pagina in objetos_pagina.paginator.page_range %}
-            <a href="{% url link_views_origem numero_pagina %}">{{numero_pagina}}</a>
-        {% endfor %}
 
     {% else %}
             Nenhum empréstimo encontrado

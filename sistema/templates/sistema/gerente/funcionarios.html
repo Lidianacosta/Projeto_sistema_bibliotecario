@@ -11,7 +11,7 @@
 
 
 {% block content %}
-    {% if objetos_pagina %}
+    {% if page_obj %}
         <table>
 
             <caption>{{tabela_titulo}}</caption>
@@ -27,7 +27,7 @@
                 </tr>
             </thead>
 
-            {% for pessoa in objetos_pagina %}
+            {% for pessoa in page_obj %}
             <tr>    
                 <td>
                     <a href="{% url link_views_acao pessoa.id %}" class="link" >
@@ -67,10 +67,6 @@
             
 
         </table>
-
-        {% for numero_pagina in objetos_pagina.paginator.page_range %}
-            <a href="{% url link_views_origem numero_pagina %}">{{numero_pagina}}</a>
-        {% endfor %}
 
     {% else %}
             Ninguém Encontrado

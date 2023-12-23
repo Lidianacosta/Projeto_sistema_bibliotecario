@@ -8,7 +8,7 @@
 {% endblock busca %}
 
 {% block content %}
-    {% if objetos_pagina %}
+    {% if page_obj %}
          <table>
 
             <caption>Livros</caption>
@@ -24,7 +24,7 @@
                 </tr>
             </thead>
         <tbody>
-        {% for livro in objetos_pagina %}
+        {% for livro in page_obj %}
             <tr>    
                 <td>
                     <a href="{% url link_views_acao livro.id %}" class="link" >
@@ -69,9 +69,6 @@
 
         </table>
 
-            {% for numero_pagina in objetos_pagina.paginator.page_range %}
-                <a href="{% url link_views_origem numero_pagina %}">{{numero_pagina}}</a>
-            {% endfor %}
     {% else %}
             Nenhum Livro Encontrado
     {% endif %}
