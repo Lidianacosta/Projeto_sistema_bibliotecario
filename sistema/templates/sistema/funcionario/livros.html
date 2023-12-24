@@ -3,7 +3,7 @@
 
 {% block busca %}
     <form action="{% url link_busca %}" method="get">
-        <input type="text" name="q" id="busca" placeholder='buscar livro' autofocus value={{request.GET.q}}>
+        <input required type="text" name="q" id="busca" placeholder='buscar livro' autofocus value="{{search_value}}">
     </form>
 {% endblock busca %}
 

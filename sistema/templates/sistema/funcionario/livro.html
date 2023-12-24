@@ -16,16 +16,16 @@
             <li>Ano: {{livro.ano}}</li>
         </ul>
         <br>
-    <form action="{% url link_acao livro.id %}" method="post">
+    <form action="{% url link_acao livro.id %}" method="POST">
         {% csrf_token %}
         {% if acao_label == "Excluir Livro" %}
             <label for="excluir">Motivo exclusao:</label>
             <textarea name="motivo_exclusao" id="excluir" cols="30" rows="5" required></textarea> <br>
         {% elif acao_label == "Emprestar" %}
             <label for="cpf">Inforne o cpf</label>
-            <input type="text" name="cpf" id="cpf">
+            <input type="text" name="cpf" id="cpf" required>
             <label for="senha">Infome a senha</label>
-            <input type="password" name="senha" id="senha">
+            <input type="password" name="senha" id="senha" required>
             <br><br>
         {% endif %}
         <input type="submit" value={{acao_label}}>

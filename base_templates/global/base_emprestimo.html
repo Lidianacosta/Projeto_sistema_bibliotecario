@@ -20,6 +20,7 @@
     </header>
 
     <main>
+        {% include "global/partials/_messages.html" %}
         {% block content %}{% endblock content %}
         {% include "global/partials/_pagination.html" %}
     </main>
