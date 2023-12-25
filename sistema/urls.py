@@ -87,31 +87,26 @@ urlpatterns = [
     # ver emprestimos
 
     path("emprestimo/emprestimos/",
-         views.EmprestimoListView.as_view(), name="ver_emprestimos"),
+         views.EmprestimoListView.as_view(),
+         name="ver_emprestimos"),
+
 
     path("emprestimo/emprestimos/<int:pk>/detail/",
-         views.EmprestimoDetaiView.as_view(), name="ver_emprestimo"),
+         views.EmprestimoDetaiView.as_view(),
+         name="ver_emprestimo"),
 
     # excluir livro
-    path('funcionario/ver-livros-excluir/<int:pagina>/',
-         views.livros_para_excluir, name='livros_excluir'),
 
     path('funcionario/ver-livros-excluir/',
-         views.livros_para_excluir, name='livros_excluir'),
+         views.ExcluirLivroListView.as_view(),
+         name='livros_excluir'),
 
+    path('funcionario/ver-livros/<int:pk>/excluir/',
+         views.LivroExcluirDetailView.as_view(),
+         name='ver_livro_excluir'),
 
-    path('funcionario/buscar-livro-emprestar/<int:pagina>/',
-         views.buscar_livro_para_excluir, name='buscar_livros_excluir'),
-
-    path('funcionario/buscar-livro-emprestar/',
-         views.buscar_livro_para_excluir, name='buscar_livros_excluir'),
-
-    path('funcionario/ver-livros/<int:livro_id>/excluir/',
-         views.ver_livro_excluir, name='ver_livro_excluir'),
-
-    path('funcionario/<int:livro_id>/excluir-livro/',
-         views.excluir_livro, name='excluir'),
-
+    path('funcionario/<int:pk>/excluir-livro/',
+         views.LivroExcluirDetailView.as_view(), name='excluir'),
 
     # create
 
@@ -121,12 +116,12 @@ urlpatterns = [
     path('cadastra-livro/',
          views.cadastrar_livro, name='cadastrar_livro'),
 
-    path('ver-usuarios/', views.ver_usuarios, name='ver_usuarios'),
-    path('ver-usuarios/<int:pagina>/', views.ver_usuarios,
+    path('ver-usuarios/', views.UsuarioListView.as_view(),
          name='ver_usuarios'),
-    path('ver-usuario/<int:usuario_id>/',
-         views.ver_usuario, name='ver_usuario'),
-    path('delete/usuario/<int:usuario_id>/',
-         views.deletar_usuario, name='deletar_usuario'),
 
+    path('ver-usuario/<int:pk>/',
+         views.UsuarioDetailView.as_view(), name='ver_usuario'),
+
+    path('delete/usuario/<int:pk>/',
+         views.UsuarioDetailView.as_view(), name='deletar_usuario'),
 ]
