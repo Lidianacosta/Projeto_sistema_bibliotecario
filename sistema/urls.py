@@ -9,10 +9,6 @@ urlpatterns = [
     path('login-gerente/', views.login_gerente, name='login_gerente'),
     path('login-funcionario/',
          views.login_funcionario, name='login_funcionario'),
-    path('cadastrar-funcionario/', views.cadastrar_funcionario,
-         name='cadastrar_funcionario'),
-    path('cadastrar-gerente/', views.cadastrar_gerente,
-         name='cadastrar_gerente'),
     path('logout-gerente/', views.logout_gerente, name='logout_gerente'),
     path('logout-gerente/', views.logout_funcionario,
          name='logout_funcionario'),
@@ -106,11 +102,16 @@ urlpatterns = [
 
     # create
 
+    path('cadastrar-funcionario/', views.FuncionarioFormView.as_view(),
+         name='cadastrar_funcionario'),
+    path('cadastrar-gerente/', views.GerenteFormView.as_view(),
+         name='cadastrar_gerente'),
+
     path('cadastra-usuario/',
-         views.cadastrar_usuario, name='cadastrar_usuario'),
+         views.UsuarioFormView.as_view(), name='cadastrar_usuario'),
 
     path('cadastra-livro/',
-         views.cadastrar_livro, name='cadastrar_livro'),
+         views.LivroFormView.as_view(), name='cadastrar_livro'),
 
     path('ver-usuarios/', views.UsuarioListView.as_view(),
          name='ver_usuarios'),

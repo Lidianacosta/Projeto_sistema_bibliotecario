@@ -5,6 +5,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.views.generic import ListView, DetailView
 from .funcionario_views.emprestimo_views import PER_PAGE
 
+
 class SolicitacoesFuncionarioListView(ListView):
     model = Funcionario
     template_name = "sistema/gerente/funcionarios.html"
@@ -27,7 +28,6 @@ class SolicitacoesFuncionarioListView(ListView):
 class AprovarFuncionarioDetailView(DetailView):
     model = Funcionario
     template_name = 'sistema/gerente/funcionario.html'
-
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
