@@ -18,27 +18,23 @@ urlpatterns = [
          name='logout_funcionario'),
 
     # Gerente
-    path('gerente/solicitacoes/<int:pagina>/page',
-         views.solicitacoes, name='solicitacoes'),
-    path('gerente/solicitacoes/', views.solicitacoes, name='solicitacoes'),
+    path('gerente/solicitacoes/',
+         views.SolicitacoesFuncionarioListView.as_view(), name='solicitacoes'),
 
-    path('gerente/<int:funcionario_id>/aprovar/',
-         views.ver_funcionario_aprovar, name='ver_aprovar'),
+    path('gerente/<int:pk>/aprovar/',
+         views.AprovarFuncionarioDetailView.as_view(), name='ver_aprovar'),
 
-    path('gerente/solicitacoes/<int:funcionario_id>/aprovar/',
-         views.aprovar, name='aprovar'),
+    path('gerente/solicitacoes/<int:pk>/aprovar/',
+         views.AprovarFuncionarioDetailView.as_view(), name='aprovar'),
 
-    path('gerente/funcionarios/<int:pagina>/',
-         views.ver_funcionarios, name='funcionarios'),
+    path('gerente/funcionarios/',
+         views.FuncionarioListView.as_view(), name='funcionarios'),
 
-    path('gerente/funcionarios/', views.ver_funcionarios,
-         name='funcionarios'),
+    path('gerente/<int:pk>/excluir/',
+         views.ExcluirFuncionarioDetailView.as_view(), name='ver_excluir'),
 
-    path('gerente/<int:funcionario_id>/excluir/',
-         views.funcionario_excluir, name='ver_excluir'),
-
-    path('gerente/funcionarios/<int:funcionario_id>/excluir/',
-         views.funcionario_excluir, name='excluir'),
+    path('gerente/funcionarios/<int:pk>/excluir/',
+         views.ExcluirFuncionarioDetailView.as_view(), name='excluir'),
 
     # funcionários
 
