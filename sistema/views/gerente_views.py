@@ -1,8 +1,8 @@
 from django.shortcuts import redirect
-from sistema.models import Funcionario
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from django.views.generic import ListView, DetailView
+from sistema.models import Funcionario
 from .funcionario_views.emprestimo_views import PER_PAGE
 
 
@@ -12,7 +12,8 @@ class SolicitacoesFuncionarioListView(ListView):
     paginate_by = PER_PAGE
 
     def get_queryset(self):
-        return super().get_queryset().filter(habilitado=False).order_by("nome_completo")
+        return super().get_queryset()\
+            .filter(habilitado=False).order_by("nome_completo")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -20,7 +21,8 @@ class SolicitacoesFuncionarioListView(ListView):
             'link_views_acao': 'sistema:ver_aprovar',
             'link_views_origem': 'sistema:solicitacoes',
             'link_base_html': "global/base_gerente.html",
-            'tabela_titulo': 'Funcionários'
+            'tabela_titulo': 'Funcionários',
+            'busca_action': 'sistema:solicitacoes',
         })
         return context
 
@@ -57,15 +59,16 @@ class FuncionarioListView(ListView):
     paginate_by = PER_PAGE
 
     def get_queryset(self):
-        return super().get_queryset().filter(habilitado=True).order_by("nome_completo")
+        return super().get_queryset()\
+            .filter(habilitado=True).order_by("nome_completo")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update({
             'link_views_acao': 'sistema:ver_excluir',
-            'link_views_origem': 'sistema:funcionarios',
             'link_base_html': "global/base_gerente.html",
-            'tabela_titulo': 'Funcionários'
+            'tabela_titulo': 'Funcionários',
+            'busca_action': 'sistema:busca_funcionarios',
         })
         return context
 

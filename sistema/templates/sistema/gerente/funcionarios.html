@@ -1,14 +1,11 @@
 {% extends link_base_html %}
 
-{% if busca_action %}
-    {% block busca %}
-        <form action="{{busca_action}}" method="get">
-            <input type="text" name="q" id="busca" placeholder="busca"> 
-        </form>
-
-    {% endblock busca %}
-{% endif %}
-
+{% block busca %}
+    <form action="{% url busca_action %}" method="get">
+        <input type="text" name="q" id="busca" value="{{search_value}}"
+placeholder="busca"> 
+    </form>
+{% endblock busca %}
 
 {% block content %}
     {% if page_obj %}
