@@ -21,6 +21,7 @@ class SolicitacoesFuncionarioListView(ListView):
             'link_views_acao': 'sistema:ver_aprovar',
             'tabela_titulo': 'Funcionários',
             'busca_action': 'sistema:solicitacoes',
+            'memu_link_str': 'memu_gerente',
         })
         return context
 
@@ -57,7 +58,8 @@ class FuncionarioListView(ListView):
     paginate_by = PER_PAGE
 
     def get_queryset(self):
-        return super().get_queryset().filter(habilitado=True).order_by("nome_completo")
+        return super().get_queryset()\
+            .filter(habilitado=True).order_by("nome_completo")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -65,6 +67,7 @@ class FuncionarioListView(ListView):
             'link_views_acao': 'sistema:ver_excluir',
             'tabela_titulo': 'Funcionários',
             'busca_action': 'sistema:busca_funcionarios',
+            'memu_link_str': 'memu_gerente',
         })
         return context
 

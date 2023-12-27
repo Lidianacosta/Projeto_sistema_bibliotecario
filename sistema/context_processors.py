@@ -19,7 +19,7 @@ def menu_link(request):
         'memu_gerente': {
             'Solicitações': 'sistema:solicitacoes',
             'Funcionários': 'sistema:funcionarios',
-            'Logout': 'sistema:funcionarios',
+            'Logout': 'sistema:logout_gerente',
         },
         'memu_home': {
             'Login Funcionário': 'sistema:login_funcionario',
