@@ -1,0 +1,10 @@
+
+{%for menu_str, menu in menu_link.items %}
+    {% if  menu_str ==  memu_link_str %}
+        {%for  label, link in menu.items %}
+            <a href="{% url link %}">
+                {{label}}
+            </a>
+        {% endfor %}
+    {% endif %}
+{% endfor %}

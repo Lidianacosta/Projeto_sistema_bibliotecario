@@ -1,9 +1,10 @@
-{% extends link_base_html %}
-
+{% extends "global/base.html" %}
 
 {% block menu %}
     <a href={% url link_view_voltar %}>Voltar</a><br>
 {% endblock menu %}
+
+{% block busca %}{% endblock busca %}
 
 
 {% block content %}

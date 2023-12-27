@@ -1,11 +1,4 @@
-{% extends link_base_html %}
-
-
-{% block busca %}
-    <form action="{% url link_busca %}" method="get">
-        <input required type="text" name="q" id="busca" placeholder='buscar livro' autofocus value="{{search_value}}">
-    </form>
-{% endblock busca %}
+{% extends "global/base.html" %}
 
 {% block content %}
     {% if page_obj %}
@@ -23,49 +16,49 @@
 
                 </tr>
             </thead>
-        <tbody>
-        {% for livro in page_obj %}
-            <tr>    
-                <td>
-                    <a href="{% url link_views_acao livro.id %}" class="link" >
-                        {{livro.livro_id}}
-                    </a>
-                </td>
-
-                <td>
-                    <a href="{% url link_views_acao livro.id %}" class="link" >
-                        {{livro.nome }}
-                    </a>
-                </td>
-
-                <td>
-                <a href="{% url link_views_acao livro.id %}" class="link" >
-                    {{livro.autor }}
-                    </a>
-                </td>
-
-                <td>
-                <a href="{% url link_views_acao livro.id %}" class="link" >
-                    {{livro.editora }}
-                    </a>
-                </td>
-                <td>
-                <a href="{% url link_views_acao livro.id %}" class="link" >
-                {{livro.ano }}
-                </a>
-                </td>
-                <td>
-                <a href="{% url link_views_acao livro.id %}" class="link" >
-                    {% if livro.emprestado %}
-                        Emprestado
-                    {% else %}
-                        Disponível
-                    {% endif %}
-                </a>
-                </td>
-      </tr>
-        {% endfor %}
-        </tbody>
+            <tbody>
+                {% for livro in page_obj %}
+                    <tr>    
+                        <td>
+                            <a href="{% url link_views_acao livro.id %}" class="link" >
+                                {{livro.livro_id}}
+                            </a>
+                        </td>
+        
+                        <td>
+                            <a href="{% url link_views_acao livro.id %}" class="link" >
+                                {{livro.nome }}
+                            </a>
+                        </td>
+        
+                        <td>
+                        <a href="{% url link_views_acao livro.id %}" class="link" >
+                            {{livro.autor }}
+                            </a>
+                        </td>
+        
+                        <td>
+                        <a href="{% url link_views_acao livro.id %}" class="link" >
+                            {{livro.editora }}
+                            </a>
+                        </td>
+                        <td>
+                        <a href="{% url link_views_acao livro.id %}" class="link" >
+                        {{livro.ano }}
+                        </a>
+                        </td>
+                        <td>
+                        <a href="{% url link_views_acao livro.id %}" class="link" >
+                            {% if livro.emprestado %}
+                                Emprestado
+                            {% else %}
+                                Disponível
+                            {% endif %}
+                        </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
 
         </table>
 

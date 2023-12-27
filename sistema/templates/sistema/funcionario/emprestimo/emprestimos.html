@@ -1,12 +1,6 @@
-{% extends "global/base_emprestimo.html" %}
+{% extends "global/base.html" %}
 
 {% load filtros %}
-
-{% block busca %}
-    <form action="" method="get">
-        <input type="text" name="q" id="busca" placeholder='buscar emprestimo' autofocus >
-    </form>
-{% endblock busca %}
 
 {% block content %}
     {% if page_obj %}
@@ -26,41 +20,41 @@
         </thead>
         <tbody>
         {% for emprestimo in page_obj %}
-        <tr>    
-            <td>
+            <tr>    
+                <td>
+                    <a href="{% url link_views_acao emprestimo.id %}" class="link" >
+                        {{emprestimo.user_name}}
+                    </a>
+                </td>
+
+                <td>
+                    <a href="{% url link_views_acao emprestimo.id %}" class="link" >
+                        {{emprestimo.user_cpf }}
+                    </a>
+                </td>
+
+                <td>
                 <a href="{% url link_views_acao emprestimo.id %}" class="link" >
-                    {{emprestimo.user_name}}
-                </a>
-            </td>
+                    {{emprestimo.emprestimo_data }}
+                    </a>
+                </td>
 
-            <td>
+                <td>
                 <a href="{% url link_views_acao emprestimo.id %}" class="link" >
-                    {{emprestimo.user_cpf }}
+                    {{emprestimo|status }}
+                    </a>
+                </td>
+                <td>
+                <a href="{% url link_views_acao emprestimo.id %}" class="link" >
+                {{emprestimo.devolucao_data }}
                 </a>
-            </td>
-
-            <td>
-            <a href="{% url link_views_acao emprestimo.id %}" class="link" >
-                {{emprestimo.emprestimo_data }}
+                </td>
+                <td>
+                <a href="{% url link_views_acao emprestimo.id %}" class="link" >
+                {{emprestimo.livro_info}}
                 </a>
-            </td>
-
-            <td>
-            <a href="{% url link_views_acao emprestimo.id %}" class="link" >
-                {{emprestimo|status }}
-                </a>
-            </td>
-            <td>
-            <a href="{% url link_views_acao emprestimo.id %}" class="link" >
-            {{emprestimo.devolucao_data }}
-            </a>
-            </td>
-            <td>
-            <a href="{% url link_views_acao emprestimo.id %}" class="link" >
-            {{emprestimo.livro_info}}
-            </a>
-            </td>
-        </tr>
+                </td>
+            </tr>
         {% endfor %}
         </tbody>
 
