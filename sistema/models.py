@@ -12,7 +12,7 @@ class Pessoa(models.Model):
     email = models.EmailField(max_length=250, default='')
     senha = models.CharField(max_length=50, default='')
     nascimento = models.DateField(default=None, null=True,)
-    cpf = models.CharField(max_length=14, default='')
+    cpf = models.CharField(max_length=14, default='', unique=True)
 
     def __str__(self) -> str:
         return f'{self.nome_completo}'
@@ -52,15 +52,15 @@ class Gerente(models.Model):
         ]
 
     senha = models.CharField(max_length=50)
-    cpf = models.CharField(max_length=14, default='')
+    cpf = models.CharField(max_length=14, default='', unique=True)
 
 
 class Livro(models.Model):
-    livro_id = models.IntegerField(default=0)
+    livro_id = models.IntegerField(default=None, unique=True)
     nome = models.CharField(max_length=50)
     autor = models.CharField(max_length=50)
     editora = models.CharField(max_length=50)
-    ano = models.IntegerField(default=0)
+    ano = models.IntegerField(default=None)
     emprestado = models.BooleanField(default=False)
 
     def __str__(self) -> str:
