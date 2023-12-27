@@ -47,7 +47,7 @@ class SearchLivroExcluirListView(SearchLivroEmprestarListView):
         context = super().get_context_data(**kwargs)
         context.update({
             'link_views_acao': 'sistema:ver_livro_excluir',
-            'link_busca': 'sistema:buscar_livros_excluir',
+            'busca_action': 'sistema:buscar_livros_excluir',
             'link_base_html': "global/base_funcionario.html"
         })
         return context
@@ -110,7 +110,6 @@ class SearchStatusEmprestimoListView(StatusEmprestimoListView):
         context.update({
             "search_value": self.search_value,
             'link_views_acao': 'sistema:ver_status_emprestimo',
-            'link_views_origem': 'sistema:buscar_status_emprestimo',
         })
         return context
 
@@ -122,7 +121,6 @@ class SearchRenovarEmprestimoListView(SearchStatusEmprestimoListView):
         context = super().get_context_data(**kwargs)
         context.update({
             'link_views_acao': 'sistema:ver_revovar_emprestimo',
-            'link_views_origem': 'sistema:buscar_emprestimo_renovar'
         })
         return context
 
@@ -146,6 +144,7 @@ class SearchUsuarioListView(UsuarioListView):
             Q(instituicao__icontains=search_value) |
             Q(nome_completo__icontains=search_value) |
             Q(cpf__icontains=search_value) |
+            Q(estado__icontains=search_value) |
             Q(email__icontains=search_value)
         )[:PER_PAGE]
 

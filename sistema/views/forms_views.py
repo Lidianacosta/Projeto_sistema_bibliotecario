@@ -1,6 +1,6 @@
+from django.contrib import messages
 from django.views.generic import FormView
 from django.shortcuts import redirect
-from django.contrib import messages
 from sistema.forms import LivroForm, UsuarioForm, FuncionarioForm, GerenteForm
 from sistema.models import Gerente
 
@@ -15,6 +15,7 @@ class UsuarioFormView(FormView):
         context.update({
             'action_form': 'sistema:cadastrar_usuario',
             'caminho_extender': "global/base_funcionario.html",
+            'memu_link_str': 'memu_funcionario',
         })
         return context
 
@@ -28,7 +29,7 @@ class LivroFormView(FormView):
         context = super().get_context_data(*args, **kwargs)
         context.update({
             'action_form': 'sistema:cadastrar_livro',
-            'caminho_extender': "global/base_funcionario.html"
+            'memu_link_str': 'memu_funcionario',
         })
         return context
 
@@ -42,7 +43,7 @@ class FuncionarioFormView(FormView):
         context = super().get_context_data(*args, **kwargs)
         context.update({
             'action_form': 'sistema:cadastrar_funcionario',
-            'caminho_extender': "global/base.html",
+            'memu_link_str': 'memu_home',
         })
         return context
 
@@ -56,13 +57,14 @@ class GerenteFormView(FormView):
         context = super().get_context_data(*args, **kwargs)
         context.update({
             'action_form': 'sistema:cadastrar_gerente',
-            'caminho_extender': "global/base.html",
+            'memu_link_str': 'memu_home',
+
         })
         return context
 
     def post(self, request, *args, **kwargs):
-        has_gerente = Gerente.objects.exists()
-        if has_gerente:
+        gerente = Gerente.objects.exists()
+        if gerente:
             messages.info(request, "Só é permitido um gerente")
             return redirect('sistema:login_gerente')
         return super().post(request, *args, **kwargs)

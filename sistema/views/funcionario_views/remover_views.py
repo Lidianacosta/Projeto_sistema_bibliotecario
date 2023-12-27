@@ -1,6 +1,6 @@
 from django.shortcuts import redirect
-from sistema.models import Usuario, Emprestimo
 from django.views.generic import ListView, DetailView
+from sistema.models import Usuario, Emprestimo
 from .emprestimo_views import PER_PAGE, LivroListView, LivroEmprestarDetailView
 
 
@@ -9,9 +9,9 @@ class ExcluirLivroListView(LivroListView):
         context = super().get_context_data(**kwargs)
         context.update({
             'link_views_acao': 'sistema:ver_livro_excluir',
-            'link_views_origem': "sistema:livros_excluir",
             'link_busca': 'sistema:buscar_livros_excluir',
-            'link_base_html': "global/base_funcionario.html"
+            'link_base_html': "global/base_funcionario.html",
+            'memu_link_str': 'memu_funcionario',
         })
         return context
 
@@ -43,15 +43,16 @@ class UsuarioListView(ListView):
             e.user_cpf
             for e in Emprestimo.objects.filter(devolucao_data=None)
         }
-        return super().get_queryset().exclude(cpf__in=cpfs_with_loans).order_by("nome_completo")
+        return super().get_queryset()\
+            .exclude(cpf__in=cpfs_with_loans).order_by("nome_completo")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update({
             'link_views_acao': 'sistema:ver_usuario',
-            'link_base_html': "global/base_funcionario.html",
             'tabela_titulo': 'Usuários',
             'busca_action': 'sistema:busca_usuarios',
+            'memu_link_str': 'memu_funcionario',
         })
         return context
 

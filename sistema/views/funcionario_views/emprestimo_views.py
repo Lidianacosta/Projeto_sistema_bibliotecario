@@ -1,7 +1,5 @@
-from django.http import HttpRequest, HttpResponse
-from django.shortcuts import get_object_or_404, redirect
-from django.db.models import Q
 from datetime import date
+from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
 from django.views.generic import ListView, DetailView
 from sistema.models import Emprestimo, Livro, Usuario
@@ -21,39 +19,8 @@ class LivroListView(ListView):
         context = super().get_context_data(**kwargs)
         context.update({
             'link_views_acao': 'sistema:ver_livro_emprestar',
-            'link_busca': 'sistema:buscar_livros_emprestar',
-            'link_base_html': "global/base_emprestimo.html"
-        })
-        return context
-
-
-class SearchLivroListView(LivroListView):
-
-    search_value = ''
-
-    def get(self, request: HttpRequest, *args,
-            **kwargs) -> HttpResponse:
-        self.search_value = request.GET.get('q', '').strip()
-        if not self.search_value:
-            return redirect('sistema:livros_emprestar')
-        return super().get(request, *args, **kwargs)
-
-    def get_queryset(self):
-        search_value = self.search_value
-
-        return super().get_queryset().filter(emprestado=False)\
-            .filter(
-            Q(nome__icontains=search_value) |
-            Q(livro_id__icontains=search_value) |
-            Q(autor__icontains=search_value) |
-            Q(editora__icontains=search_value) |
-            Q(ano__icontains=search_value)
-        ).order_by('nome')[:PER_PAGE]
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context.update({
-            "search_value": self.search_value
+            'busca_action': 'sistema:buscar_livros_emprestar',
+            'memu_link_str': 'memu_emprestimo',
         })
         return context
 
@@ -68,7 +35,6 @@ class LivroEmprestarDetailView(DetailView):
             'link_view_voltar': 'sistema:livros_emprestar',
             'acao_label': "Emprestar",
             'link_acao': 'sistema:emprestar',
-            'link_base_html': "global/base_emprestimo.html",
             'title': 'Emprestar'
         })
         return context
@@ -78,7 +44,7 @@ class LivroEmprestarDetailView(DetailView):
         senha = request.POST.get('senha', '')
 
         try:
-            usuario = self.queryset.get(cpf=cpf, senha=senha)
+            usuario = Usuario.objects.get(cpf=cpf, senha=senha)
         except Usuario.DoesNotExist:
             messages.info(request, "Usuario não encontrado")
             return self.get(request, *args, **kwargs)
@@ -111,39 +77,10 @@ class EmprestimoListView(ListView):
         context = super().get_context_data(*args, **kwargs)
         context.update({
             'link_views_acao': 'sistema:ver_emprestimo',
-            'link_views_origem': 'sistema:ver_emprestimos',
+            'busca_action': 'sistema:busca_emprestimos',
+            'memu_link_str': 'memu_emprestimo',
         })
 
-        return context
-
-
-class SearchEmprestimo(EmprestimoListView):
-    search_value = ''
-
-    def get(self, request: HttpRequest, *args,
-            **kwargs) -> HttpResponse:
-        self.search_value = request.GET.get('q', '').strip()
-        if not self.search_value:
-            return redirect('sistema:')
-        return super().get(request, *args, **kwargs)
-
-    def get_queryset(self):
-        search_value = self.search_value
-
-        return super().get_queryset().filter(emprestado=False)\
-            .filter(
-            Q(nome__icontains=search_value) |
-            Q(livro_id__icontains=search_value) |
-            Q(autor__icontains=search_value) |
-            Q(editora__icontains=search_value) |
-            Q(ano__icontains=search_value)
-        ).order_by('nome')[:PER_PAGE]
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context.update({
-            "search_value": self.search_value
-        })
         return context
 
 
@@ -166,14 +103,14 @@ class StatusEmprestimoListView(ListView):
     paginate_by = PER_PAGE
 
     def get_queryset(self):
-        return super().get_queryset()\
-            .filter(devolucao_data=None).order_by("emprestimo_data")
+        return super().get_queryset().filter(devolucao_data=None).order_by("emprestimo_data")
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         context.update({
             'link_views_acao': 'sistema:ver_status_emprestimo',
-            'link_views_origem': 'sistema:status_emprestimo',
+            'busca_action': 'sistema:buscar_status_emprestimo',
+            'memu_link_str': 'memu_emprestimo',
         })
         return context
 
@@ -203,7 +140,8 @@ class RenovarEmprestimoListView(StatusEmprestimoListView):
         context = super().get_context_data(*args, **kwargs)
         context.update({
             'link_views_acao': 'sistema:ver_revovar_emprestimo',
-            'link_views_origem': 'sistema:ver_emprestimo_renovar',
+            'link_busca': 'sistema:buscar_emprestimo_renovar',
+            'memu_link_str': 'memu_emprestimo',
         })
         return context
 
@@ -219,7 +157,7 @@ class RenovarEmprestimoDetailView(EmprestimoDetaiView):
         return context
 
     def post(self, request, *args, **kwargs):
-        emprestimo = get_object_or_404(Emprestimo, pk=kwargs.get("pk"))
+        emprestimo = self.get_object()
 
         emprestimo.devolucao_data = date.today()
         emprestimo.save()

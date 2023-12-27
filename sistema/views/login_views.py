@@ -1,6 +1,7 @@
 from django.contrib import auth
 from django.shortcuts import redirect, render
 from django.contrib.auth.forms import AuthenticationForm
+
 # Create your views here.
 
 
@@ -17,8 +18,8 @@ def login_funcionario(request):
     context = {
         'form': form,
         'action_form': 'sistema:login_funcionario',
-        'caminho_extender': "global/base.html",
-        'criar_gerente': 'sistema:cadastrar_funcionario'
+        'criar_gerente': 'sistema:cadastrar_funcionario',
+        'memu_link_str': 'memu_home',
     }
 
     return render(
@@ -42,8 +43,8 @@ def login_gerente(request):
     context = {
         'form': form,
         'action_form': 'sistema:login_gerente',
-        'caminho_extender': "global/base.html",
-        'criar_gerente': 'sistema:cadastrar_gerente'
+        'criar_gerente': 'sistema:cadastrar_gerente',
+        'memu_link_str': 'memu_home',
     }
 
     return render(
