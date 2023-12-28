@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from .validator import (validate_cpf, validate_email, validate_name,
+                        validate_telefone, validate_nascimento)
 # Create your models here.
 
 
@@ -7,12 +9,27 @@ class Pessoa(models.Model):
     class Meta:
         abstract = True
 
-    nome_completo = models.CharField(max_length=50, default='')
-    telefone = models.CharField(max_length=50, default='')
-    email = models.EmailField(max_length=250, default='')
+    nome_completo = models.CharField(
+        max_length=50, default='',
+        validators=[validate_name]
+    )
+    telefone = models.CharField(
+        max_length=50, default='',
+        validators=[validate_telefone]
+    )
+    email = models.EmailField(
+        max_length=250, default='',
+        validators=[validate_email]
+    )
+    nascimento = models.DateField(
+        default=None, null=True,
+        validators=[validate_nascimento]
+    )
+    cpf = models.CharField(
+        max_length=14, default='', unique=True,
+        validators=[validate_cpf]
+    )
     senha = models.CharField(max_length=50, default='')
-    nascimento = models.DateField(default=None, null=True,)
-    cpf = models.CharField(max_length=14, default='', unique=True)
 
     def __str__(self) -> str:
         return f'{self.nome_completo}'
@@ -37,11 +54,11 @@ class Funcionario(Pessoa, models.Model):
 
 class Usuario(Pessoa, models.Model):
     instituicao = models.CharField(max_length=50)
-    idade = models.IntegerField()
+    idade = models.PositiveIntegerField(default=None)
     estado = models.CharField(max_length=2, default='')
     cidade = models.CharField(max_length=50, default='')
     rua = models.CharField(max_length=50, default='')
-    numero = models.IntegerField(default=0)
+    numero = models.PositiveIntegerField(default=None)
 
 
 class Gerente(models.Model):
@@ -56,11 +73,11 @@ class Gerente(models.Model):
 
 
 class Livro(models.Model):
-    livro_id = models.IntegerField(default=None, unique=True)
+    livro_id = models.PositiveIntegerField(default=None, unique=True)
     nome = models.CharField(max_length=50)
     autor = models.CharField(max_length=50)
     editora = models.CharField(max_length=50)
-    ano = models.IntegerField(default=None)
+    ano = models.PositiveIntegerField(default=None)
     emprestado = models.BooleanField(default=False)
 
     def __str__(self) -> str:

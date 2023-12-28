@@ -124,14 +124,14 @@ urlpatterns = [
     path('cadastra-usuario/',
          views.UsuarioFormView.as_view(), name='cadastrar_usuario'),
 
-    path('cadastra-livro/',
+    path('cadastrar-livro/',
          views.LivroFormView.as_view(), name='cadastrar_livro'),
 
     path('ver-usuarios/',
          views.UsuarioListView.as_view(), name='ver_usuarios'),
 
-    path('busca-usuarios/',
-         views.SearchUsuarioListView.as_view(), name='busca_usuarios'),
+    path('busca-usuarios/', views.SearchUsuarioListView.as_view(),
+         name='busca_usuarios'),
 
     path('ver-usuario/<int:pk>/',
          views.UsuarioDetailView.as_view(), name='ver_usuario'),
