@@ -1,14 +1,7 @@
-{% extends link_base_html %}
-
-
-{% block busca %}
-    <form action="{% url link_busca %}" method="get">
-        <input type="text" name="q" id="busca" placeholder='buscar livro'autofocus>
-    </form>
-{% endblock busca %}
+{% extends "global/base.html" %}
 
 {% block content %}
-    {% if objetos_pagina %}
+    {% if page_obj %}
          <table>
 
             <caption>Livros</caption>
@@ -20,58 +13,55 @@
                     <th>Editora</th>
                     <th>Ano</th>
                     <th>situação</th>
-                   
+
                 </tr>
             </thead>
-        <tbody>
-        {% for livro in objetos_pagina %}
-            <tr>    
-                <td>
-                    <a href="{% url link_views_acao livro.id %}" class="link" >
-                        {{livro.livro_id}}
-                    </a>
-                </td>
-                
-                <td>
-                    <a href="{% url link_views_acao livro.id %}" class="link" >
-                        {{livro.nome }}
-                    </a>
-                </td>
+            <tbody>
+                {% for livro in page_obj %}
+                    <tr>    
+                        <td>
+                            <a href="{% url link_views_acao livro.id %}" class="link" >
+                                {{livro.livro_id}}
+                            </a>
+                        </td>
+        
+                        <td>
+                            <a href="{% url link_views_acao livro.id %}" class="link" >
+                                {{livro.nome }}
+                            </a>
+                        </td>
+        
+                        <td>
+                        <a href="{% url link_views_acao livro.id %}" class="link" >
+                            {{livro.autor }}
+                            </a>
+                        </td>
+        
+                        <td>
+                        <a href="{% url link_views_acao livro.id %}" class="link" >
+                            {{livro.editora }}
+                            </a>
+                        </td>
+                        <td>
+                        <a href="{% url link_views_acao livro.id %}" class="link" >
+                        {{livro.ano }}
+                        </a>
+                        </td>
+                        <td>
+                        <a href="{% url link_views_acao livro.id %}" class="link" >
+                            {% if livro.emprestado %}
+                                Emprestado
+                            {% else %}
+                                Disponível
+                            {% endif %}
+                        </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
 
-                <td>
-                <a href="{% url link_views_acao livro.id %}" class="link" >
-                    {{livro.autor }}
-                    </a>
-                </td>
-
-                <td>
-                <a href="{% url link_views_acao livro.id %}" class="link" >
-                    {{livro.editora }}
-                    </a>
-                </td>
-                <td>
-                <a href="{% url link_views_acao livro.id %}" class="link" >
-                {{livro.ano }}
-                </a>
-                </td>
-                <td>
-                <a href="{% url link_views_acao livro.id %}" class="link" >
-                    {% if livro.emprestado %}
-                        Emprestado
-                    {% else %}
-                        Disponível
-                    {% endif %}
-                </a>
-                </td>
-			</tr>
-        {% endfor %}
-        </tbody>
-            
         </table>
 
-            {% for numero_pagina in objetos_pagina.paginator.page_range %}
-                <a href="{% url link_views_origem numero_pagina %}">{{numero_pagina}}</a>
-            {% endfor %}
     {% else %}
             Nenhum Livro Encontrado
     {% endif %}

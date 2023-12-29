@@ -1,112 +1,90 @@
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import redirect
+from django.contrib.auth.models import Permission
+from django.contrib.contenttypes.models import ContentType
+from django.views.generic import ListView, DetailView
 from sistema.models import Funcionario
-from django.core.paginator import Paginator
-from django.contrib.auth.decorators import permission_required
+from .funcionario_views.emprestimo_views import PER_PAGE
 
 
-# @permission_required('pode aprovar funcionario', login_url='sistema:login')
-def solicitacoes(request, pagina=1):
-    solicitacoes = Funcionario.objects.filter(habilitado=False)
+class SolicitacoesFuncionarioListView(ListView):
+    model = Funcionario
+    template_name = "sistema/gerente/funcionarios.html"
+    paginate_by = PER_PAGE
 
-    paginator = Paginator(solicitacoes, per_page=5)
+    def get_queryset(self):
+        return super().get_queryset()\
+            .filter(habilitado=False).order_by("nome_completo")
 
-    objetos_pagina = paginator.get_page(pagina)
-
-    context = {
-        'objetos_pagina': objetos_pagina,
-        'link_views_acao': 'sistema:ver_aprovar',
-        'link_views_origem': 'sistema:solicitacoes',
-        'link_base_html': "global/base_gerente.html",
-        'tabela_titulo': 'Funcionários'
-    }
-
-    return render(
-        request, "sistema/gerente/funcionarios.html",
-        context=context
-    )
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'link_views_acao': 'sistema:ver_aprovar',
+            'tabela_titulo': 'Funcionários',
+            'busca_action': 'sistema:solicitacoes',
+            'memu_link_str': 'memu_gerente',
+        })
+        return context
 
 
-# @permission_required('pode aprovar funcionario', login_url='sistema:login')
-def ver_funcionario_aprovar(request, funcionario_id):
-    funcionario = get_object_or_404(
-        Funcionario, pk=funcionario_id)
+class AprovarFuncionarioDetailView(DetailView):
+    model = Funcionario
+    template_name = 'sistema/gerente/funcionario.html'
 
-    context = {
-        'funcionario': funcionario,
-        'link_template_voltar': "sistema:solicitacoes",
-        'acao_label': "Aprovar",
-        'acao_link': "sistema:aprovar",
-    }
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'link_template_voltar': "sistema:solicitacoes",
+            'acao_label': "Aprovar",
+            'acao_link': "sistema:aprovar",
+        })
+        return context
 
-    return render(
-        request,
-        'sistema/gerente/aprovar_excluir.html',
-        context=context
-    )
+    def post(self, request, *args, **kwargs):
+        funcionario = self.get_object()
+        content_type = ContentType.objects.get_for_model(Funcionario)
+        permission = Permission.objects.filter(content_type=content_type)
 
-
-# @permission_required('pode aprovar funcionario', login_url='sistema:login')
-def aprovar(request, funcionario_id):
-
-    if request.method == 'POST':
-        funcionario = get_object_or_404(Funcionario, funcionario_id)
-        funcionario.user.user_permissions = [
-            'pode fazer emprestimo',
-            'pode cadastrar livro',
-            'pode excluir livro',
-            'pode criar usuario',
-            'pode excluir usuario',
-        ]
+        funcionario.user.user_permissions.set(list(permission))
+        funcionario.user.save()
         funcionario.habilitado = True
         funcionario.save()
 
-    return redirect('sistema:solicitacoes')
+        return redirect('sistema:solicitacoes')
 
 
-# @permission_required('pode excluir funcionario', login_url='sistema:login')
-def ver_funcionarios(request, pagina=1):
-    funcionarios = Funcionario.objects.filter(habilitado=True)
+class FuncionarioListView(ListView):
+    model = Funcionario
+    template_name = "sistema/gerente/funcionarios.html"
+    paginate_by = PER_PAGE
 
-    paginator = Paginator(funcionarios, per_page=5)
+    def get_queryset(self):
+        return super().get_queryset()\
+            .filter(habilitado=True).order_by("nome_completo")
 
-    objetos_pagina = paginator.get_page(pagina)
-
-    context = {
-        'objetos_pagina': objetos_pagina,
-        'link_views_acao': 'sistema:ver_ecluir',
-        'link_views_origem': 'funcionarios',
-        'link_base_html': "global/base_gerente.html",
-        'tabela_titulo': 'Funcionários'
-    }
-
-    return render(
-        request, "sistema/gerente/funcionarios.html",
-        context=context
-    )
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'link_views_acao': 'sistema:ver_excluir',
+            'tabela_titulo': 'Funcionários',
+            'busca_action': 'sistema:busca_funcionarios',
+            'memu_link_str': 'memu_gerente',
+        })
+        return context
 
 
-# @permission_required('pode excluir funcionario', login_url='sistema:login')
-def funcionario_excluir(request, funcionario_id):
-    funcionario = get_object_or_404(Funcionario, funcionario_id)
+class ExcluirFuncionarioDetailView(AprovarFuncionarioDetailView):
 
-    context = {
-        'funcionario': funcionario,
-        'link_template_voltar': "sistema:funcionarios",
-        'acao_label': "Excluir",
-        'acao_link': "sistema:excluir"
-    }
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'link_template_voltar': "sistema:funcionarios",
+            'acao_label': "Excluir",
+            'acao_link': "sistema:excluir"
+        })
+        return context
 
-    return render(
-        request,
-        'sistema/gerente/aprovar_excluir.html',
-        context=context
-    )
-
-
-# @permission_required('pode excluir funcionario', login_url='sistema:login')
-def excluir(request, funcionario_id):
-    if request.method == 'POST':
-        funcionaro = get_object_or_404(Funcionario, funcionario_id)
+    def post(self, request, *args, **kwargs):
+        funcionaro = self.get_object()
         funcionaro.delete()
 
-    return redirect('sistema:funcionarios')
+        return redirect('sistema:funcionarios')

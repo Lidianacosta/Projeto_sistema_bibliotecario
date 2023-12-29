@@ -25,13 +25,15 @@ SECRET_KEY = "django-insecure-0y#$d62w$67u*u^mpg+if^y2*tr5#-0ee0l8zx87c(-q!s#(!@
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+AUTH_USER_MODEL = 'users.User'
+
 ALLOWED_HOSTS = []
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    "cpf_field",
+    "users",
     "sistema",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -66,6 +68,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                'sistema.context_processors.menu_link',
             ],
             'libraries': {
                 'filtros': 'sistema.templatestags.filtros',

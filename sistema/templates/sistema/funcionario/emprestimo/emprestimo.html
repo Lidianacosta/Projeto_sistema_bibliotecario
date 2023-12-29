@@ -1,10 +1,11 @@
-{% extends "global/base_emprestimo.html" %}
-
+{% extends "global/base.html" %}
+{% load filtros %}
 
 {% block menu %}
     <a href="{% url link_voltar %}">Voltar</a>
 {% endblock menu %}
-{% load filtros %}
+
+{% block busca %}{% endblock busca %}
 
 {% block content %}
     <h4> Detalhes do Empréstimo:</h4>

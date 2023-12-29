@@ -2,29 +2,31 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{title}}</title>
-    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
-    <link rel="stylesheet" href="{% static "global/base.css" %}">
-</head>
-
-<header>
-    <h1>Sistema Bibliotecário</h1>
-    <nav>
-        {% block menu %}
-        <a href="{% url "sistema:login_funcionario" %}">Login Funcionário</a>
-            <a href="{% url "sistema:login_gerente" %}">Login Gerente</a>
-            <a href={% url "sistema:cadastrar_funcionario" %}>Cadastrar Funcionário</a>
-        {% endblock menu %}
-    </nav>
-</header>
+{% include 'global/partials/_head.html' %}
 
 <body>
+    <header>
+        <h1>Sistema Bibliotecário</h1>
+        <nav>
+            {% block menu %}
+                {% include "global/partials/_menu_link.html" %}
+            {% endblock menu %}
+            {% block busca %}
+                {% include "global/partials/_search.html" %}
+            {% endblock busca %}
+        </nav>
+    </header>
+
     <main>
+        {% include "global/partials/_messages.html" %}
         {% block content %}{% endblock content %}
+        {% include "global/partials/_pagination.html" %}
     </main>
-    
+
+    <footer>
+        {% include "global/partials/_footer.html" %}
+    </footer>
+
 </body>
+
 </html>

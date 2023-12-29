@@ -1,11 +1,44 @@
 from django.contrib import admin
-
-from sistema.models import Emprestimo, Funcionario, Gerente, Livro, Usuario
+from .models import Emprestimo, Funcionario, Livro, Usuario
 
 # Register your models here.
 
-admin.site.register(Emprestimo)
-admin.site.register(Livro)
-admin.site.register(Funcionario)
-admin.site.register(Gerente)
-admin.site.register(Usuario)
+
+@admin.register(Livro)
+class LivroAdmin(admin.ModelAdmin):
+    list_display = ('id', 'livro_id', 'nome', 'ano', 'emprestado')
+    list_display_links = ('nome',)
+    search_fields = ('id', 'livro_id', 'nome', 'ano', 'emprestado')
+    list_per_page = 10
+    ordering = ('-id',)
+    list_filter = ('emprestado',)
+    readonly_fields = ('emprestado',)
+
+
+@admin.register(Emprestimo)
+class EmprestimoAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user_name', 'user_cpf', 'livro_info')
+    list_display_links = ('user_name', 'user_cpf', 'livro_info')
+    search_fields = ('id', 'user_name', 'user_cpf', 'livro_info')
+    list_per_page = 10
+    ordering = ('-id',)
+
+
+@admin.register(Funcionario)
+class FuncionarioAdmin(admin.ModelAdmin):
+    list_display = ('id', 'nome_completo', 'cpf', 'telefone', 'email')
+    list_display_links = ('nome_completo', 'cpf', 'telefone', 'email')
+    search_fields = ('id', 'nome_completo', 'cpf', 'telefone', 'email')
+    list_per_page = 10
+    ordering = ('-id',)
+    list_filter = ('habilitado',)
+    readonly_fields = ('habilitado',)
+
+
+@admin.register(Usuario)
+class UsuarioAdmin(admin.ModelAdmin):
+    list_display = ('id', 'nome_completo', 'cpf', 'telefone', 'email')
+    list_display_links = ('nome_completo', 'cpf', 'telefone', 'email')
+    search_fields = ('id', 'nome_completo', 'cpf', 'telefone', 'email')
+    list_per_page = 10
+    ordering = ('-id',)

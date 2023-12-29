@@ -26,5 +26,6 @@
     },
     "emmet.includeLanguages": {
         "django-html": "html",
-    }
+    },
+    "editor.renderWhitespace": "all",
 }

@@ -9,149 +9,133 @@ urlpatterns = [
     path('login-gerente/', views.login_gerente, name='login_gerente'),
     path('login-funcionario/',
          views.login_funcionario, name='login_funcionario'),
-    path('cadastrar-funcionario/', views.cadastrar_funcionario,
-         name='cadastrar_funcionario'),
-    path('cadastrar-gerente/', views.cadastrar_gerente,
-         name='cadastrar_gerente'),
+
     path('logout-gerente/', views.logout_gerente, name='logout_gerente'),
-    path('logout-gerente/', views.logout_funcionario, name='logout_funcionario'),
+    path('logout-gerente/',
+         views.logout_funcionario, name='logout_funcionario'),
 
     # Gerente
-    path('gerente/solicitacoes/<int:pagina>/',
-         views.solicitacoes, name='solicitacoes'),
-    path('gerente/solicitacoes/', views.solicitacoes, name='solicitacoes'),
+    path('gerente/solicitacoes/',
+         views.SolicitacoesFuncionarioListView.as_view(), name='solicitacoes'),
 
-    path('gerente/<int:funcionario_id>/aprovar/',
-         views.ver_funcionario_aprovar, name='ver_aprovar'),
-    path('gerente/solicitacoes/<int:funcionario_id>/aprovar/',
-         views.ver_funcionario_aprovar, name='aprovar'),
+    path('gerente/<int:pk>/aprovar/',
+         views.AprovarFuncionarioDetailView.as_view(), name='ver_aprovar'),
 
-    path('gerente/funcionarios/<int:pagina>/',
-         views.ver_funcionarios, name='funcionarios'),
-    path('gerente/funcionarios/', views.ver_funcionarios,
-         name='funcionarios'),
-    path('gerente/<int:funcionario_id>/excluir/',
-         views.funcionario_excluir, name='ver_excluir'),
-    path('gerente/funcionarios/<int:funcionario_id>/excluir/',
-         views.funcionario_excluir, name='excluir'),
+    path('gerente/solicitacoes/<int:pk>/aprovar/',
+         views.AprovarFuncionarioDetailView.as_view(), name='aprovar'),
+
+    path('gerente/funcionarios/',
+         views.FuncionarioListView.as_view(), name='funcionarios'),
+
+    path('gerente/busca-funcionarios/',
+         views.SearchFuncionarioListView.as_view(), name='busca_funcionarios'),
+
+    path('gerente/<int:pk>/excluir/',
+         views.ExcluirFuncionarioDetailView.as_view(), name='ver_excluir'),
+
+    path('gerente/funcionarios/<int:pk>/excluir/',
+         views.ExcluirFuncionarioDetailView.as_view(), name='excluir'),
 
     # funcionários
 
-
     # empréstimo realizar
 
-
     path('funcionario/emprestimo/ver-livros-emprestar/',
-         views.livros_para_empretar, name='livros_emprestar'),
-
-    path('funcionario/emprestimo/ver-livros-emprestar/<int:pagina>/',
-         views.livros_para_empretar, name='livros_emprestar'),
-
-    path('funcionario/emprestimo/buscar-livro-emprestar/<int:pagina>/',
-         views.buscar_livro_para_emprestar, name='buscar_livros_emprestar'),
+         views.LivroListView.as_view(), name='livros_emprestar'),
 
     path('funcionario/emprestimo/buscar-livro-emprestar/',
-         views.buscar_livro_para_emprestar, name='buscar_livros_emprestar'),
+         views.SearchLivroEmprestarListView.as_view(),
+         name='buscar_livros_emprestar'),
 
-    path('funcionario/emprestimo/ver-livro/<int:livro_id>/realizar-emprestimo/',
-         views.ver_livro_emprestar, name='ver_livro_emprestar'),
+    path('funcionario/emprestimo/ver-livro/<int:pk>/realizar-emprestimo/',
+         views.LivroEmprestarDetailView.as_view(), name='ver_livro_emprestar'),
 
-    path('funcionario/emprestar/<int:livro_id>/',
-         views.realizar_emprestimo, name='emprestar'),
-
-
+    path('funcionario/emprestar/<int:pk>/',
+         views.LivroEmprestarDetailView.as_view(), name='emprestar'),
 
     # status emprestimo
 
     path("emprestimo/status/",
-         views.status_emprestimo, name="status_emprestimo"),
-
-    path("emprestimo/status/<int:pagina>/",
-         views.status_emprestimo, name="status_emprestimo"),
-
-    path("emprestimo/buscar-emprestimos-devolver/<int:pagina>/",
-         views.buscar_emprestimos, name="buscar_status_emprestimo"),
+         views.StatusEmprestimoListView.as_view(), name="status_emprestimo"),
 
     path("emprestimo/buscar-emprestimos-devolver/",
-         views.buscar_emprestimos, name="buscar_status_emprestimo"),
+         views.SearchStatusEmprestimoListView.as_view(),
+         name="buscar_status_emprestimo"),
 
-    path("emprestimo/devover/<int:emprestimo_id>/detail/",
-         views.ver_status_emprestimo, name="ver_status_emprestimo"),
+    path("emprestimo/devover/<int:pk>/detail/",
+         views.StatusEmprestimoDetailView.as_view(),
+         name="ver_status_emprestimo"),
 
-    path("emprestimo/devolver/<int:emprestimo_id>/",
-         views.devolver_livro, name="devolver_livro"),
+    path("emprestimo/devolver/<int:pk>/",
+         views.StatusEmprestimoDetailView.as_view(), name="devolver_livro"),
 
 
     # renovar emprestimo
 
     path("emprestimo/renovar/",
-         views.ver_emprestimo_renovar, name="ver_emprestimo_renovar"),
-
-    path("emprestimo/renovar/<int:pagina>/",
-         views.ver_emprestimo_renovar, name="ver_emprestimo_renovar"),
-
-    path("emprestimo/buscar-emprestimos-renovar/<int:pagina>/",
-         views.buscar_emprestimos, name="buscar_emprestimo_renovar"),
+         views.RenovarEmprestimoListView.as_view(),
+         name="ver_emprestimo_renovar"),
 
     path("emprestimo/buscar-emprestimos-renovar/",
-         views.buscar_emprestimos, name="buscar_emprestimo_renovar"),
+         views.SearchRenovarEmprestimoListView.as_view(),
+         name="buscar_emprestimo_renovar"),
 
-    path("emprestimo/renovar/<int:emprestimo_id>/detail/",
-         views.ver_revovar_emprestimo, name="ver_revovar_emprestimo"),
+    path("emprestimo/renovar/<int:pk>/detail/",
+         views.RenovarEmprestimoDetailView.as_view(),
+         name="ver_revovar_emprestimo"),
 
-    path("emprestimo/<int:emprestimo_id>/renovar",
-         views.renovar_emprestimo, name="renovar_emprestimo"),
+    path("emprestimo/<int:pk>/renovar",
+         views.RenovarEmprestimoDetailView.as_view(),
+         name="renovar_emprestimo"),
 
     # ver emprestimos
 
     path("emprestimo/emprestimos/",
-         views.emprestimos, name="ver_emprestimos"),
-
-    path("emprestimo/emprestimos/<int:pagina>/",
-         views.emprestimos, name="ver_emprestimos"),
-
-    path("emprestimo/buscar-emprestimos/<int:pagina>/",
-         views.buscar_emprestimos, name="busca_emprestimos"),
+         views.EmprestimoListView.as_view(), name="ver_emprestimos"),
 
     path("emprestimo/buscar-emprestimos/",
-         views.buscar_emprestimos, name="busca_emprestimos"),
+         views.SearchEmprestimoListView.as_view(), name="busca_emprestimos"),
 
-
-    path("emprestimo/emprestimos/<int:emprestimo_id>/detail/",
-         views.ver_emprestimo, name="ver_emprestimo"),
-
+    path("emprestimo/emprestimos/<int:pk>/detail/",
+         views.EmprestimoDetaiView.as_view(), name="ver_emprestimo"),
 
     # excluir livro
-    path('funcionario/ver-livros-excluir/<int:pagina>/',
-         views.livros_para_excluir, name='livros_excluir'),
 
     path('funcionario/ver-livros-excluir/',
-         views.livros_para_excluir, name='livros_excluir'),
+         views.ExcluirLivroListView.as_view(), name='livros_excluir'),
 
+    path('funcionario/buscar-livro-excluir/',
+         views.SearchLivroExcluirListView.as_view(),
+         name='buscar_livros_excluir'),
 
-    path('funcionario/buscar-livro-emprestar/<int:pagina>/',
-         views.buscar_livro_para_excluir, name='buscar_livros_excluir'),
+    path('funcionario/ver-livros/<int:pk>/excluir/',
+         views.LivroExcluirDetailView.as_view(), name='ver_livro_excluir'),
 
-    path('funcionario/buscar-livro-emprestar/',
-         views.buscar_livro_para_excluir, name='buscar_livros_excluir'),
-
-    path('funcionario/ver-livros/<int:livro_id>/excluir/',
-         views.ver_livro_excluir, name='ver_livro_excluir'),
-
-    path('funcionario/<int:livro_id>/excluir-livro/',
-         views.excluir_livro, name='excluir'),
-
+    path('funcionario/<int:pk>/excluir-livro/',
+         views.LivroExcluirDetailView.as_view(), name='excluir'),
 
     # create
 
+    path('cadastrar-funcionario/', views.FuncionarioFormView.as_view(),
+         name='cadastrar_funcionario'),
+    path('cadastrar-gerente/', views.GerenteFormView.as_view(),
+         name='cadastrar_gerente'),
+
     path('cadastra-usuario/',
-         views.cadastrar_usuario, name='cadastrar_usuario'),
+         views.UsuarioFormView.as_view(), name='cadastrar_usuario'),
 
-    path('cadastra-livro/',
-         views.cadastrar_livro, name='cadastrar_livro'),
+    path('cadastrar-livro/',
+         views.LivroFormView.as_view(), name='cadastrar_livro'),
 
-    path('delete/usuario', views.ver_usuarios, name='ver_usuarios'),
-    path('delete/usuario/<int:usuario_id>/',
-         views.ver_usuario, name='ver_usuario'),
-    path('delete/usuario', views.deletar_usuario, name='deletar_usuario'),
+    path('ver-usuarios/',
+         views.UsuarioListView.as_view(), name='ver_usuarios'),
+
+    path('busca-usuarios/', views.SearchUsuarioListView.as_view(),
+         name='busca_usuarios'),
+
+    path('ver-usuario/<int:pk>/',
+         views.UsuarioDetailView.as_view(), name='ver_usuario'),
+
+    path('delete/usuario/<int:pk>/',
+         views.UsuarioDetailView.as_view(), name='deletar_usuario'),
 ]

@@ -1,300 +1,163 @@
-from django.shortcuts import get_object_or_404, redirect, render
-from django.db.models import Q
-from django.core.paginator import Paginator
 from datetime import date
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib import messages
+from django.views.generic import ListView, DetailView
 from sistema.models import Emprestimo, Livro, Usuario
 
-
-def livros_para_empretar(request, pagina=1):
-    livros = Livro.objects.filter(
-        emprestado=False).order_by('nome')
-
-    paginator = Paginator(livros, per_page=5)
-    objetos_pagina = paginator.get_page(pagina)
-    context = {
-        'objetos_pagina': objetos_pagina,
-        'link_views_origem': 'sistema:livros_emprestar',
-        'link_views_acao': 'sistema:ver_livro_emprestar',
-        'link_busca': 'sistema:buscar_livros_emprestar',
-        'link_base_html': "global/base_emprestimo.html"
-    }
-
-    return render(
-        request,
-        "sistema/funcionario/livros.html",
-        context=context
-    )
+PER_PAGE = 4
 
 
-def buscar_livro_para_emprestar(request, pagina=1):
-    buscado = request.GET.get('q', '').strip()
+class LivroListView(ListView):
+    model = Livro
+    paginate_by = PER_PAGE
+    template_name = "sistema/funcionario/livros.html"
 
-    if not buscado:
-        return redirect('sistema:livros_emprestar')
+    def get_queryset(self):
+        return super().get_queryset().filter(emprestado=False).order_by("nome")
 
-    livros = Livro.objects\
-        .filter(emprestado=False)\
-        .filter(
-            Q(nome__icontains=buscado) |
-            Q(livro_id__icontains=buscado) |
-            Q(autor__icontains=buscado) |
-            Q(editora__icontains=buscado) |
-            Q(ano__icontains=buscado)
-        ).order_by('nome')
-
-    paginator = Paginator(livros, per_page=5)
-    objetos_pagina = paginator.get_page(pagina)
-    context = {
-        'objetos_pagina': objetos_pagina,
-        'link_views_origem': 'sistema:buscar_livros_emprestar',
-        'link_views_acao': 'sistema:ver_livro_emprestar',
-        'link_busca': 'sistema:buscar_livros_emprestar',
-        'link_base_html': "global/base_emprestimo.html"
-    }
-
-    return render(
-        request,
-        "sistema/funcionario/livros.html",
-        context=context
-    )
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'link_views_acao': 'sistema:ver_livro_emprestar',
+            'busca_action': 'sistema:buscar_livros_emprestar',
+            'memu_link_str': 'memu_emprestimo',
+        })
+        return context
 
 
-def ver_livro_emprestar(request, livro_id):
-    livro = get_object_or_404(Livro, pk=livro_id)
+class LivroEmprestarDetailView(DetailView):
+    model = Livro
+    template_name = "sistema/funcionario/livro.html"
 
-    context = {
-        'livro': livro,
-        'link_view_voltar': 'sistema:livros_emprestar',
-        'acao_label': "Emprestar",
-        'link_acao': 'sistema:emprestar',
-        'link_busca': 'sistema:buscar_livros_emprestar',
-        'link_base_html': "global/base_emprestimo.html",
-        'title': 'Emprestar'
-    }
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'link_view_voltar': 'sistema:livros_emprestar',
+            'acao_label': "Emprestar",
+            'link_acao': 'sistema:emprestar',
+            'title': 'Emprestar'
+        })
+        return context
 
-    return render(
-        request,
-        "sistema/funcionario/acao_livro.html",
-        context=context
-    )
-
-
-def realizar_emprestimo(request, livro_id):
-
-    if request.method == 'POST':
+    def post(self, request, *args, **kwargs):
         cpf = request.POST.get('cpf', '')
         senha = request.POST.get('senha', '')
-        usuario = Usuario.objects.filter(cpf=cpf, senha=senha)[0]
 
-        if not usuario:
-            return redirect('sistema:ver_livro_emprestar')
+        try:
+            usuario = Usuario.objects.get(cpf=cpf, senha=senha)
+        except Usuario.DoesNotExist:
+            messages.info(request, "Usuario não encontrado")
+            return self.get(request, *args, **kwargs)
 
         emprestimo = Emprestimo()
         emprestimo.user_cpf = cpf
         emprestimo.user_name = usuario.nome_completo
         emprestimo.emprestimo_data = date.today()
-        emprestimo.livro_info = get_object_or_404(Livro, pk=livro_id)
+        emprestimo.livro_info = self.get_object().pk
         emprestimo.livro_info.emprestado = True
+        emprestimo.livro_info.save()
         emprestimo.save()
 
-    return redirect('sistema:livros_emprestar')
+        messages.info(request, "Livro Emprestado")
+        return redirect('sistema:livros_emprestar')
+
 
 # emprestimo
 
+class EmprestimoListView(ListView):
+    model = Emprestimo
+    template_name = "sistema/funcionario/emprestimo/emprestimos.html"
+    paginate_by = PER_PAGE
 
-def emprestimos(request, pagina=1):
-    emprestimos_objetos = Emprestimo.objects.all().order_by()
+    def get_queryset(self):
+        return super().get_queryset()\
+            .exclude(devolucao_data=None).order_by("devolucao_data")
 
-    paginator = Paginator(emprestimos_objetos, per_page=5)
-    objetos_pagina = paginator.get_page(pagina)
-    context = {
-        'objetos_pagina': objetos_pagina,
-        'link_views_acao': 'sistema:ver_emprestimo',
-        'link_views_origem': 'sistema:ver_emprestimos',
-    }
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context.update({
+            'link_views_acao': 'sistema:ver_emprestimo',
+            'busca_action': 'sistema:busca_emprestimos',
+            'memu_link_str': 'memu_emprestimo',
+        })
 
-    return render(
-        request,
-        "sistema/funcionario/emprestimo/emprestimos.html",
-        context=context
-    )
-
-
-def buscar_emprestimos(request, pagina=1):
-    buscado = request.GET.get('q', '').strip()
-    emprestimos_objetos = Emprestimo.objects\
-        .filter(
-            Q(user_name__icontains=buscado) |
-            Q(user_cpf__icontains=buscado) |
-            Q(emprestimo_data__icontains=buscado) |
-            Q(devolucao_data__icontains=buscado)
-        )
-
-    paginator = Paginator(emprestimos_objetos, per_page=5)
-    objetos_pagina = paginator.get_page(pagina)
-    context = {
-        'objetos_pagina': objetos_pagina,
-        'link_views_acao': 'sistema:ver_emprestimo',
-        'link_views_origem': 'sistema:busca_emprestimos'
-    }
-
-    return render(
-        request,
-        "sistema/funcionario/emprestimo/emprestimos.html",
-        context=context
-    )
+        return context
 
 
-def ver_emprestimo(request, emprestimo_id):
-    emprestimo = get_object_or_404(Emprestimo, pk=emprestimo_id)
+class EmprestimoDetaiView(DetailView):
+    model = Emprestimo
+    template_name = "sistema/funcionario/emprestimo/emprestimo.html"
 
-    context = {
-        'emprestimo': emprestimo,
-        'link_voltar': 'sistema:ver_emprestimos',
-        'title': 'emprestimo'
-    }
-
-    return render(
-        request,
-        "sistema/funcionario/emprestimo/emprestimo.html",
-        context=context
-    )
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context.update({
+            'link_voltar': 'sistema:ver_emprestimos',
+            'title': 'Empréstimo',
+        })
+        return context
 
 
-def status_emprestimo(request, pagina=1):
-    emprestimos_objetos = Emprestimo.objects.all()
+class StatusEmprestimoListView(ListView):
+    model = Emprestimo
+    template_name = "sistema/funcionario/emprestimo/emprestimos.html"
+    paginate_by = PER_PAGE
 
-    paginator = Paginator(emprestimos_objetos, per_page=5)
-    objetos_pagina = paginator.get_page(pagina)
-    context = {
-        'objetos_pagina': objetos_pagina,
-        'link_views_acao': 'sistema:ver_status_emprestimo',
-        'link_views_origem': 'sistema:status_emprestimo',
-    }
+    def get_queryset(self):
+        return super().get_queryset().filter(devolucao_data=None).order_by("emprestimo_data")
 
-    return render(
-        request,
-        "sistema/funcionario/emprestimo/emprestimos.html",
-        context=context
-    )
-
-
-def buscar_status_emprestimo(request, pagina=1):
-    buscado = request.GET.get('q', '').strip()
-    emprestimos_objetos = Emprestimo.objects\
-        .filter(
-            Q(user_name__icontains=buscado) |
-            Q(user_cpf__icontains=buscado) |
-            Q(emprestimo_data__icontains=buscado) |
-            Q(devolucao_data__icontains=buscado)
-        )
-
-    paginator = Paginator(emprestimos_objetos, per_page=5)
-    objetos_pagina = paginator.get_page(pagina)
-    context = {
-        'objetos_pagina': objetos_pagina,
-        'link_views_acao': 'sistema:ver_status_emprestimo',
-        'link_views_origem': 'sistema:buscar_status_emprestimo'
-    }
-
-    return render(
-        request,
-        "sistema/funcionario/emprestimo/emprestimos.html",
-        context=context
-    )
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context.update({
+            'link_views_acao': 'sistema:ver_status_emprestimo',
+            'busca_action': 'sistema:buscar_status_emprestimo',
+            'memu_link_str': 'memu_emprestimo',
+        })
+        return context
 
 
-def ver_status_emprestimo(request, emprestimo_id):
-    emprestimo = get_object_or_404(Emprestimo, pk=emprestimo_id)
+class StatusEmprestimoDetailView(EmprestimoDetaiView):
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context.update({
+            'link_voltar': 'sistema:status_emprestimo',
+            'link_acao': 'sistema:devolver_livro',
+            'acao_label': 'Devolver',
+        })
+        return context
 
-    context = {
-        'emprestimo': emprestimo,
-        'link_voltar': 'sistema:status_emprestimo',
-        'link_acao': 'sistema:devolver_livro',
-        'acao_label': 'Devolver'
-    }
-
-    return render(
-        request,
-        "sistema/funcionario/emprestimo/emprestimo.html",
-        context=context
-    )
-
-
-def devolver_livro(request, emprestimo_id):
-    if request.method == 'POST':
-        emprestimo = get_object_or_404(Emprestimo, pk=emprestimo_id)
-
+    def post(self, request, *args, **kwargs):
+        emprestimo = get_object_or_404(Emprestimo, pk=kwargs.get("pk"))
         emprestimo.devolucao_data = date.today()
         emprestimo.livro_info.emprestado = False
+        emprestimo.livro_info.save()
         emprestimo.save()
 
-    return redirect('sistema:status_emprestimo')
+        return redirect('sistema:status_emprestimo')
 
 
-def ver_emprestimo_renovar(request, pagina=1):
-    emprestimos_objetos = Emprestimo.objects.all()
-
-    paginator = Paginator(emprestimos_objetos, per_page=5)
-    objetos_pagina = paginator.get_page(pagina)
-    context = {
-        'objetos_pagina': objetos_pagina,
-        'link_views_acao': 'sistema:ver_revovar_emprestimo',
-        'link_views_origem': 'sistema:ver_emprestimo_renovar',
-    }
-
-    return render(
-        request,
-        "sistema/funcionario/emprestimo/emprestimos.html",
-        context=context
-    )
+class RenovarEmprestimoListView(StatusEmprestimoListView):
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context.update({
+            'link_views_acao': 'sistema:ver_revovar_emprestimo',
+            'link_busca': 'sistema:buscar_emprestimo_renovar',
+            'memu_link_str': 'memu_emprestimo',
+        })
+        return context
 
 
-def buscar_emprestimo_renovar(request, pagina=1):
-    buscado = request.GET.get('q', '').strip()
-    emprestimos_objetos = Emprestimo.objects\
-        .filter(
-            Q(user_name__icontains=buscado) |
-            Q(user_cpf__icontains=buscado) |
-            Q(emprestimo_data__icontains=buscado) |
-            Q(devolucao_data__icontains=buscado)
-        )
+class RenovarEmprestimoDetailView(EmprestimoDetaiView):
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context.update({
+            'link_voltar': 'sistema:ver_emprestimo_renovar',
+            'link_acao': 'sistema:renovar_emprestimo',
+            'acao_label': 'Renovar'
+        })
+        return context
 
-    paginator = Paginator(emprestimos_objetos, per_page=5)
-    objetos_pagina = paginator.get_page(pagina)
-    context = {
-        'objetos_pagina': objetos_pagina,
-        'link_views_acao': 'sistema:ver_revovar_emprestimo',
-        'link_views_origem': 'sistema:buscar_emprestimo_renovar'
-    }
-
-    return render(
-        request,
-        "sistema/funcionario/emprestimo/emprestimos.html",
-        context=context
-    )
-
-
-def ver_revovar_emprestimo(request, emprestimo_id):
-    emprestimo = get_object_or_404(Emprestimo, pk=emprestimo_id)
-
-    context = {
-        'emprestimo': emprestimo,
-        'link_voltar': 'sistema:ver_emprestimo_renovar',
-        'link_acao': 'sistema:renovar_emprestimo',
-        'acao_label': 'Renovar'
-    }
-
-    return render(
-        request,
-        "sistema/funcionario/emprestimo/emprestimo.html",
-        context=context
-    )
-
-
-def renovar_emprestimo(request, emprestimo_id):
-    if request.method == 'POST':
-        emprestimo = get_object_or_404(Emprestimo, pk=emprestimo_id)
+    def post(self, request, *args, **kwargs):
+        emprestimo = self.get_object()
 
         emprestimo.devolucao_data = date.today()
         emprestimo.save()
@@ -306,4 +169,4 @@ def renovar_emprestimo(request, emprestimo_id):
         )
         novo_emprestimo.save()
 
-    return redirect('sistema:ver_emprestimo_renovar')
+        return redirect('sistema:ver_emprestimo_renovar')
