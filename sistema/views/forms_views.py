@@ -1,8 +1,14 @@
-from django.contrib import messages
 from django.views.generic import FormView
 from django.shortcuts import redirect
+from django.contrib import messages
 from sistema.forms import LivroForm, UsuarioForm, FuncionarioForm, GerenteForm
-from sistema.models import Gerente
+from users.models import User
+
+
+PERMISSION_GERENTE = [
+    ('excluir_funcionario', 'pode excluir funcionario'),
+    ('aprovar_funcionario', 'pode aprovar funcionario'),
+]
 
 
 class UsuarioFormView(FormView):
@@ -63,8 +69,9 @@ class GerenteFormView(FormView):
         return context
 
     def post(self, request, *args, **kwargs):
-        gerente = Gerente.objects.exists()
-        if gerente:
+        exist = User.objects.filter(
+            user_permissions__in=PERMISSION_GERENTE).exists()
+        if exist:
             messages.info(request, "Só é permitido um gerente")
             return redirect('sistema:login_gerente')
         return super().post(request, *args, **kwargs)

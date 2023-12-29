@@ -1,14 +1,14 @@
 from datetime import date
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
+from users.models import User
 from sistema.models import Funcionario, Livro, Usuario
 
 
 class GerenteForm(UserCreationForm):
     class Meta:
         model = User
-        fields = ('username',)
+        fields = ('cpf',)
         permissions = [
             'pode aprovar funcionario',
             'pode excluir funcionario',
@@ -66,7 +66,7 @@ class FuncionarioForm(forms.ModelForm):
     def save(self, commit: bool = ...):  # type: ignore
         funcionario = self.save(commit=False)
         funcionario.user = User.objects.create_user(
-            username=funcionario.cpf,
+            cpf=funcionario.cpf,
             password=funcionario.senha
         )
         funcionario.user.user_permissions.clear()

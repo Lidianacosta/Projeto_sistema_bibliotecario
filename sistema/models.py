@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from users.models import User
 from .validator import (validate_cpf, validate_email, validate_name,
                         validate_telefone, validate_nascimento)
 # Create your models here.
@@ -59,17 +59,6 @@ class Usuario(Pessoa, models.Model):
     cidade = models.CharField(max_length=50, default='')
     rua = models.CharField(max_length=50, default='')
     numero = models.PositiveIntegerField(default=None)
-
-
-class Gerente(models.Model):
-    class Meta:
-        permissions = [
-            ('excluir_funcionario', 'pode excluir funcionario'),
-            ('aprovar_funcionario', 'pode aprovar funcionario'),
-        ]
-
-    senha = models.CharField(max_length=50)
-    cpf = models.CharField(max_length=14, default='', unique=True)
 
 
 class Livro(models.Model):
