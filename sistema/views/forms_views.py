@@ -1,17 +1,20 @@
 from django.views.generic import FormView
 from django.shortcuts import redirect
-from django.contrib import messages
 from sistema.forms import LivroForm, UsuarioForm, FuncionarioForm, GerenteForm
+from django.contrib import messages
 from users.models import User
+from rolepermissions.mixins import HasRoleMixin
 
 
 PERMISSION_GERENTE = [
-    ('excluir_funcionario', 'pode excluir funcionario'),
-    ('aprovar_funcionario', 'pode aprovar funcionario'),
+    'pode aprovar funcionario',
+    'pode excluir funcionario',
 ]
 
 
-class UsuarioFormView(FormView):
+class UsuarioFormView(HasRoleMixin, FormView):
+    allowed_roles = 'funcionario'
+    redirect_to_login = 'sistema:login_funcionario'
     form_class = UsuarioForm
     success_url = 'sistema:cadastrar_usuario'
     template_name = 'sistema/form.html'
@@ -20,13 +23,15 @@ class UsuarioFormView(FormView):
         context = super().get_context_data(*args, **kwargs)
         context.update({
             'action_form': 'sistema:cadastrar_usuario',
-            'caminho_extender': "global/base_funcionario.html",
             'memu_link_str': 'memu_funcionario',
         })
         return context
 
 
-class LivroFormView(FormView):
+class LivroFormView(HasRoleMixin, FormView):
+    allowed_roles = 'funcionario'
+    redirect_to_login = 'sistema:login_funcionario'
+
     form_class = LivroForm
     success_url = 'sistema:cadastrar_livro'
     template_name = 'sistema/form.html'

@@ -1,13 +1,19 @@
 from datetime import date
+from rolepermissions.mixins import HasRoleMixin
 from django.shortcuts import get_object_or_404, redirect
-from django.contrib import messages
 from django.views.generic import ListView, DetailView
+from django.contrib import messages
 from sistema.models import Emprestimo, Livro, Usuario
+
+GRUPO = 'funcionario'
+LOGIN_URL = 'sistema:login_funcionario'
 
 PER_PAGE = 4
 
 
-class LivroListView(ListView):
+class LivroListView(HasRoleMixin, ListView):
+    allowed_roles = GRUPO
+    redirect_to_login = LOGIN_URL
     model = Livro
     paginate_by = PER_PAGE
     template_name = "sistema/funcionario/livros.html"
@@ -18,14 +24,16 @@ class LivroListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update({
-            'link_views_acao': 'sistema:ver_livro_emprestar',
+            'link_views_acao': 'sistema:emprestar',
             'busca_action': 'sistema:buscar_livros_emprestar',
             'memu_link_str': 'memu_emprestimo',
         })
         return context
 
 
-class LivroEmprestarDetailView(DetailView):
+class LivroEmprestarDetailView(HasRoleMixin, DetailView):
+    allowed_roles = GRUPO
+    redirect_to_login = LOGIN_URL
     model = Livro
     template_name = "sistema/funcionario/livro.html"
 
@@ -58,13 +66,14 @@ class LivroEmprestarDetailView(DetailView):
         emprestimo.livro_info.save()
         emprestimo.save()
 
-        messages.info(request, "Livro Emprestado")
         return redirect('sistema:livros_emprestar')
 
 
 # emprestimo
 
-class EmprestimoListView(ListView):
+class EmprestimoListView(HasRoleMixin, ListView):
+    allowed_roles = GRUPO
+    redirect_to_login = LOGIN_URL
     model = Emprestimo
     template_name = "sistema/funcionario/emprestimo/emprestimos.html"
     paginate_by = PER_PAGE
@@ -84,7 +93,9 @@ class EmprestimoListView(ListView):
         return context
 
 
-class EmprestimoDetaiView(DetailView):
+class EmprestimoDetaiView(HasRoleMixin, DetailView):
+    allowed_roles = GRUPO
+    redirect_to_login = LOGIN_URL
     model = Emprestimo
     template_name = "sistema/funcionario/emprestimo/emprestimo.html"
 
@@ -97,18 +108,21 @@ class EmprestimoDetaiView(DetailView):
         return context
 
 
-class StatusEmprestimoListView(ListView):
+class StatusEmprestimoListView(HasRoleMixin, ListView):
+    allowed_roles = GRUPO
+    redirect_to_login = LOGIN_URL
     model = Emprestimo
     template_name = "sistema/funcionario/emprestimo/emprestimos.html"
     paginate_by = PER_PAGE
 
     def get_queryset(self):
-        return super().get_queryset().filter(devolucao_data=None).order_by("emprestimo_data")
+        return super().get_queryset()\
+            .filter(devolucao_data=None).order_by("emprestimo_data")
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         context.update({
-            'link_views_acao': 'sistema:ver_status_emprestimo',
+            'link_views_acao': 'sistema:devolver_livro',
             'busca_action': 'sistema:buscar_status_emprestimo',
             'memu_link_str': 'memu_emprestimo',
         })
@@ -139,7 +153,7 @@ class RenovarEmprestimoListView(StatusEmprestimoListView):
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         context.update({
-            'link_views_acao': 'sistema:ver_revovar_emprestimo',
+            'link_views_acao': 'sistema:renovar_emprestimo',
             'link_busca': 'sistema:buscar_emprestimo_renovar',
             'memu_link_str': 'memu_emprestimo',
         })

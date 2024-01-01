@@ -2,8 +2,9 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect
 from django.db.models import Q
 
-from .funcionario_views.emprestimo_views import EmprestimoListView, \
-    LivroListView, StatusEmprestimoListView, PER_PAGE
+from .funcionario_views.emprestimo_views import (
+    EmprestimoListView, LivroListView, StatusEmprestimoListView, PER_PAGE
+)
 from .gerente_views import FuncionarioListView
 from .funcionario_views.remover_views import UsuarioListView
 
@@ -46,9 +47,8 @@ class SearchLivroExcluirListView(SearchLivroEmprestarListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update({
-            'link_views_acao': 'sistema:ver_livro_excluir',
+            'link_views_acao': 'sistema:excluir_livro',
             'busca_action': 'sistema:buscar_livros_excluir',
-            'link_base_html': "global/base_funcionario.html"
         })
         return context
 
@@ -109,7 +109,7 @@ class SearchStatusEmprestimoListView(StatusEmprestimoListView):
         context = super().get_context_data(**kwargs)
         context.update({
             "search_value": self.search_value,
-            'link_views_acao': 'sistema:ver_status_emprestimo',
+            'link_views_acao': 'sistema:devolver_livro',
         })
         return context
 
@@ -120,7 +120,7 @@ class SearchRenovarEmprestimoListView(SearchStatusEmprestimoListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update({
-            'link_views_acao': 'sistema:ver_revovar_emprestimo',
+            'link_views_acao': 'sistema:renovar_emprestimo',
         })
         return context
 

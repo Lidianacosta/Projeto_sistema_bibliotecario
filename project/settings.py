@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "rolepermissions",
     "users",
     "sistema",
     "django.contrib.admin",
@@ -136,3 +137,6 @@ STATICFILES_DIRS = (  # para configurar os aquivos staticos base
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+ROLEPERMISSIONS_MODULE = 'users.roles'
+ROLEPERMISSIONS_REDIRECT_TO_LOGIN = True

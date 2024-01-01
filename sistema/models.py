@@ -1,7 +1,9 @@
 from django.db import models
 from users.models import User
-from .validator import (validate_cpf, validate_email, validate_name,
-                        validate_telefone, validate_nascimento)
+from .validator import (
+    validate_cpf, validate_email,
+    validate_name, validate_telefone, validate_nascimento
+)
 # Create your models here.
 
 
@@ -21,6 +23,7 @@ class Pessoa(models.Model):
         max_length=250, default='',
         validators=[validate_email]
     )
+    senha = models.CharField(max_length=50, default='')
     nascimento = models.DateField(
         default=None, null=True,
         validators=[validate_nascimento]
@@ -29,7 +32,6 @@ class Pessoa(models.Model):
         max_length=14, default='', unique=True,
         validators=[validate_cpf]
     )
-    senha = models.CharField(max_length=50, default='')
 
     def __str__(self) -> str:
         return f'{self.nome_completo}'
@@ -37,13 +39,8 @@ class Pessoa(models.Model):
 
 class Funcionario(Pessoa, models.Model):
     class Meta:
-        permissions = [
-            ('emprestar', 'pode fazer emprestimo'),
-            ('cadastrar_livro', 'pode cadastrar livro'),
-            ('excluir_livro', 'pode excluir livro'),
-            ('criar_usuario', 'pode criar usuario'),
-            ('excluir_usuario', 'pode excluir usuario'),
-        ]
+        verbose_name = "Funcionário"
+        verbose_name_plural = "Funcionário"
 
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, blank=True, null=True)
@@ -53,6 +50,10 @@ class Funcionario(Pessoa, models.Model):
 
 
 class Usuario(Pessoa, models.Model):
+    class Meta:
+        verbose_name = "usuário"
+        verbose_name_plural = "usuário"
+
     instituicao = models.CharField(max_length=50)
     idade = models.PositiveIntegerField(default=None)
     estado = models.CharField(max_length=2, default='')
@@ -62,6 +63,10 @@ class Usuario(Pessoa, models.Model):
 
 
 class Livro(models.Model):
+    class Meta:
+        verbose_name = "Livro"
+        verbose_name_plural = "Livros"
+
     livro_id = models.PositiveIntegerField(default=None, unique=True)
     nome = models.CharField(max_length=50)
     autor = models.CharField(max_length=50)
@@ -74,6 +79,10 @@ class Livro(models.Model):
 
 
 class Emprestimo(models.Model):
+    class Meta:
+        verbose_name = "Empréstimo"
+        verbose_name_plural = "Empréstimos"
+
     user_name = models.CharField(max_length=50)
     user_cpf = models.CharField(max_length=14, default='')
     livro_info = models.ForeignKey(Livro, on_delete=models.CASCADE)

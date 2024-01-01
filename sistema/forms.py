@@ -1,38 +1,29 @@
 from datetime import date
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from users.models import User
 from sistema.models import Funcionario, Livro, Usuario
+from users.models import User
 
 
 class GerenteForm(UserCreationForm):
     class Meta:
         model = User
-        fields = ('cpf',)
-        permissions = [
-            'pode aprovar funcionario',
-            'pode excluir funcionario',
-        ]
+        fields = ('cpf', )
 
 
 class UsuarioForm(forms.ModelForm):
     class Meta:
         model = Usuario
-        fields = (
-            'nome_completo', 'cpf',  'telefone', 'email', 'nascimento',
-            'cidade', 'estado', 'instituicao', 'estado', 'cidade', 'rua',
-            'numero', 'senha'
-        )
+        fields = ('nome_completo', 'cpf', 'telefone', 'email', 'nascimento',
+                  'cidade', 'estado', 'instituicao', 'estado', 'cidade', 'rua',
+                  'numero', 'senha')
 
         widgets = {
-            'senha': forms.PasswordInput(
-                attrs={
-                    'placeholder': 'infrome sua senha'
-                },
-            ),
+            'senha':
+            forms.PasswordInput(attrs={'placeholder': 'infrome sua senha'}, ),
         }
 
-    def save(self, commit: bool = ...):  # type: ignore
+    def save(self, commit: bool = ...):
         usuario = self.save(commit=False)
         usuario.idade = (date.today() - usuario.nascimento).days // 365
         usuario.save()
@@ -40,34 +31,30 @@ class UsuarioForm(forms.ModelForm):
 
 
 class LivroForm(forms.ModelForm):
-
     class Meta:
         model = Livro
-        exclude = ("emprestado",)
+        exclude = ("emprestado", )
 
 
 class FuncionarioForm(forms.ModelForm):
     class Meta:
         model = Funcionario
-        fields = (
-            'nome_completo', 'telefone', 'email', 'nascimento',
-            'cpf', 'cidade', 'estado', 'senha'
-        )
+        fields = ('nome_completo', 'telefone', 'email', 'nascimento', 'cpf',
+                  'cidade', 'estado', 'senha')
 
         widgets = {
-            'senha': forms.PasswordInput(
-                attrs={
-                    'placeholder': 'infrome sua senha',
-                },
-            ),
-            'nascimento': forms.DateInput(),
+            'senha':
+            forms.PasswordInput(attrs={
+                'placeholder': 'infrome sua senha',
+            }, ),
+            'nascimento':
+            forms.DateInput(),
         }
 
-    def save(self, commit: bool = ...):  # type: ignore
+    def save(self, commit: bool = ...):
         funcionario = self.save(commit=False)
         funcionario.user = User.objects.create_user(
-            cpf=funcionario.cpf,
-            password=funcionario.senha
+            cpf=funcionario.cpf, password=funcionario.senha
         )
         funcionario.user.user_permissions.clear()
         return super().save(commit=True)

@@ -1,16 +1,18 @@
 from django.shortcuts import redirect
 from django.views.generic import ListView, DetailView
+from rolepermissions.mixins import HasRoleMixin
 from sistema.models import Usuario, Emprestimo
 from .emprestimo_views import PER_PAGE, LivroListView, LivroEmprestarDetailView
+
+LOGIN_URL = 'sistema:login_funcionario'
 
 
 class ExcluirLivroListView(LivroListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update({
-            'link_views_acao': 'sistema:ver_livro_excluir',
+            'link_views_acao': 'sistema:excluir_livro',
             'link_busca': 'sistema:buscar_livros_excluir',
-            'link_base_html': "global/base_funcionario.html",
             'memu_link_str': 'memu_funcionario',
         })
         return context
@@ -22,8 +24,7 @@ class LivroExcluirDetailView(LivroEmprestarDetailView):
         context.update({
             'link_view_voltar': 'sistema:livros_excluir',
             'acao_label': "Excluir Livro",
-            'link_acao': 'sistema:excluir',
-            'link_base_html': "global/base_funcionario.html",
+            'link_acao': 'sistema:excluir_livro',
         })
         return context
 
@@ -33,7 +34,9 @@ class LivroExcluirDetailView(LivroEmprestarDetailView):
         return redirect('sistema:livros_excluir')
 
 
-class UsuarioListView(ListView):
+class UsuarioListView(HasRoleMixin, ListView):
+    allowed_roles = 'funcionario'
+    redirect_to_login = LOGIN_URL
     model = Usuario
     template_name = 'sistema/gerente/funcionarios.html'
     paginate_by = PER_PAGE
@@ -49,7 +52,7 @@ class UsuarioListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update({
-            'link_views_acao': 'sistema:ver_usuario',
+            'link_views_acao': 'sistema:deletar_usuario',
             'tabela_titulo': 'Usuários',
             'busca_action': 'sistema:busca_usuarios',
             'memu_link_str': 'memu_funcionario',
@@ -57,7 +60,9 @@ class UsuarioListView(ListView):
         return context
 
 
-class UsuarioDetailView(DetailView):
+class UsuarioDetailView(HasRoleMixin, DetailView):
+    allowed_roles = 'funcionario'
+    redirect_to_login = LOGIN_URL
     model = Usuario
     template_name = 'sistema/funcionario/usuario.html'
 
