@@ -1,60 +1,49 @@
-from datetime import date
+from typing import Any
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from sistema.models import Funcionario, Livro, Usuario
-from users.models import User
+from rolepermissions.roles import assign_role
+from sistema.models import Funcionario, Usuario
+from users.models import CustomUser
 
 
 class GerenteForm(UserCreationForm):
     class Meta:
-        model = User
+        model = CustomUser
         fields = ('cpf', )
 
+    def save(self, commit: bool = True) -> Any:
+        user = self.save(commit=False)
+        assign_role(user, 'gerente')
+        return super().save(commit)
 
-class UsuarioForm(forms.ModelForm):
+
+class UsuarioForm(UserCreationForm):
+    instituicao = forms.CharField(max_length=50, required=True)
+
     class Meta:
-        model = Usuario
-        fields = ('nome_completo', 'cpf', 'telefone', 'email', 'nascimento',
-                  'cidade', 'estado', 'instituicao', 'estado', 'cidade', 'rua',
-                  'numero', 'senha')
-
-        widgets = {
-            'senha':
-            forms.PasswordInput(attrs={'placeholder': 'infrome sua senha'}, ),
-        }
-
-    def save(self, commit: bool = ...):
-        usuario = self.save(commit=False)
-        usuario.idade = (date.today() - usuario.nascimento).days // 365
-        usuario.save()
-        return super().save(commit=True)
-
-
-class LivroForm(forms.ModelForm):
-    class Meta:
-        model = Livro
-        exclude = ("emprestado", )
-
-
-class FuncionarioForm(forms.ModelForm):
-    class Meta:
-        model = Funcionario
-        fields = ('nome_completo', 'telefone', 'email', 'nascimento', 'cpf',
-                  'cidade', 'estado', 'senha')
-
-        widgets = {
-            'senha':
-            forms.PasswordInput(attrs={
-                'placeholder': 'infrome sua senha',
-            }, ),
-            'nascimento':
-            forms.DateInput(),
-        }
-
-    def save(self, commit: bool = ...):
-        funcionario = self.save(commit=False)
-        funcionario.user = User.objects.create_user(
-            cpf=funcionario.cpf, password=funcionario.senha
+        model = CustomUser
+        fields = (
+            'full_name', 'cpf', 'nascimento', 'telefone', 'email',
+            'instituicao', 'estado', 'cidade', 'rua', 'numero'
         )
-        funcionario.user.user_permissions.clear()
+
+    def save(self, commit: bool = ...):
+        user = self.save(commit=False)
+        usuario = Usuario(user=user, instituicao=self.instituicao.clean)
+        usuario.save()
+
         return super().save(commit=True)
+
+
+class FuncionarioForm(UserCreationForm):
+    class Meta:
+        model = CustomUser
+        fields = ('full_name', 'cpf', 'nascimento', 'telefone',
+                  'email', 'estado', 'cidade', 'rua', 'numero')
+
+    def save(self, commit: bool = True):
+        user = self.save(commit=False)
+        funcionario = Funcionario(user=user)
+        funcionario.save()
+
+        return super().save(commit)

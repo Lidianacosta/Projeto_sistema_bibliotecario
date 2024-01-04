@@ -26,19 +26,10 @@ class EmprestimoAdmin(admin.ModelAdmin):
 
 @admin.register(Funcionario)
 class FuncionarioAdmin(admin.ModelAdmin):
-    list_display = ('id', 'nome_completo', 'cpf', 'telefone', 'email')
-    list_display_links = ('nome_completo', 'cpf', 'telefone', 'email')
-    search_fields = ('id', 'nome_completo', 'cpf', 'telefone', 'email')
-    list_per_page = 10
-    ordering = ('-id',)
     list_filter = ('habilitado',)
     readonly_fields = ('habilitado',)
 
 
 @admin.register(Usuario)
 class UsuarioAdmin(admin.ModelAdmin):
-    list_display = ('id', 'nome_completo', 'cpf', 'telefone', 'email')
-    list_display_links = ('nome_completo', 'cpf', 'telefone', 'email')
-    search_fields = ('id', 'nome_completo', 'cpf', 'telefone', 'email')
-    list_per_page = 10
-    ordering = ('-id',)
+    pass
