@@ -6,7 +6,7 @@ from django.contrib import messages
 from sistema.models import Emprestimo, Livro, Usuario
 
 GRUPO = 'funcionario'
-LOGIN_URL = 'sistema:login_funcionario'
+LOGIN_URL = 'sistema:login'
 
 PER_PAGE = 4
 

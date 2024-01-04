@@ -6,13 +6,9 @@ app_name = "sistema"
 
 urlpatterns = [
 
-    path('login-gerente/', views.login_gerente, name='login_gerente'),
-    path('login-funcionario/',
-         views.login_funcionario, name='login_funcionario'),
+    path('login/', views.login, name='login'),
 
-    path('logout-gerente/', views.logout_gerente, name='logout_gerente'),
-    path('logout-gerente/',
-         views.logout_funcionario, name='logout_funcionario'),
+    path('logout/', views.logout, name='logout'),
 
     # Gerente
     path('gerente/solicitacoes/',

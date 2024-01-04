@@ -7,7 +7,7 @@ from sistema.models import Funcionario
 from .funcionario_views.emprestimo_views import PER_PAGE
 
 GRUPO = 'gerente'
-LOGIN_URL = 'sistema:login_gerente'
+LOGIN_URL = 'sistema:login'
 
 
 class SolicitacoesFuncionarioListView(HasRoleMixin, ListView):

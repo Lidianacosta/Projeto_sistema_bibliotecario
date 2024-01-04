@@ -14,7 +14,7 @@ PERMISSION_GERENTE = [
 
 class UsuarioFormView(HasRoleMixin, FormView):
     allowed_roles = 'funcionario'
-    redirect_to_login = 'sistema:login_funcionario'
+    redirect_to_login = 'sistema:login'
     form_class = UsuarioForm
     success_url = 'sistema:cadastrar_usuario'
     template_name = 'sistema/form.html'
@@ -30,7 +30,7 @@ class UsuarioFormView(HasRoleMixin, FormView):
 
 class LivroFormView(HasRoleMixin, FormView):
     allowed_roles = 'funcionario'
-    redirect_to_login = 'sistema:login_funcionario'
+    redirect_to_login = 'sistema:login'
 
     form_class = LivroForm
     success_url = 'sistema:cadastrar_livro'

@@ -4,7 +4,7 @@ from rolepermissions.mixins import HasRoleMixin
 from sistema.models import Usuario, Emprestimo
 from .emprestimo_views import PER_PAGE, LivroListView, LivroEmprestarDetailView
 
-LOGIN_URL = 'sistema:login_funcionario'
+LOGIN_URL = 'sistema:login'
 
 
 class ExcluirLivroListView(LivroListView):

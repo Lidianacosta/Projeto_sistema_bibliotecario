@@ -14,16 +14,15 @@ def menu_link(request):
             'Empréstimos': 'sistema:livros_emprestar',
             'Remover Livro': 'sistema:livros_excluir',
             'Remover Usuário': 'sistema:ver_usuarios',
-            'Logout': 'sistema:logout_funcionario',
+            'Logout': 'sistema:logout',
         },
         'memu_gerente': {
             'Solicitações': 'sistema:solicitacoes',
             'Funcionários': 'sistema:funcionarios',
-            'Logout': 'sistema:logout_gerente',
+            'Logout': 'sistema:logout',
         },
         'memu_home': {
-            'Login Funcionário': 'sistema:login_funcionario',
-            'Login Gerente': 'sistema:login_gerente',
+            'Login': 'sistema:login',
             'Cadastrar Funcionário': 'sistema:cadastrar_funcionario',
         },
     }

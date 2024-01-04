@@ -1,48 +1,29 @@
-from django.contrib import auth
+from django.contrib import auth, messages
 from django.shortcuts import redirect, render
 from django.contrib.auth.forms import AuthenticationForm
-
+from rolepermissions.checkers import has_role
+from users.roles import Funcionario, Gerente
 # Create your views here.
 
 
-def login_funcionario(request):
+def login(request):
     form = AuthenticationForm(request)
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
-
         if form.is_valid():
             user = form.get_user()
-            auth.login(request, user=user)
-            redirect('sistema:cadastrar_usuario')
+            if has_role(user, Funcionario):
+                auth.login(request, user=user)
+                return redirect('sistema:cadastrar_usuario')
+            if has_role(user, Gerente):
+                auth.login(request, user=user)
+                return redirect('sistema:solicitacoes')
+            messages.warning(request, 'Usuario não autorizado')
 
     context = {
         'form': form,
-        'action_form': 'sistema:login_funcionario',
-        'criar_gerente': 'sistema:cadastrar_funcionario',
-        'memu_link_str': 'memu_home',
-    }
-
-    return render(
-        request,
-        "sistema/login.html",
-        context=context
-    )
-
-
-def login_gerente(request):
-    form = AuthenticationForm(request)
-
-    if request.method == 'POST':
-        form = AuthenticationForm(request, data=request.POST)
-
-        if form.is_valid():
-            user = form.get_user()
-            auth.login(request, user=user)
-            redirect('sistema:solicitacoes')
-
-    context = {
-        'form': form,
-        'action_form': 'sistema:login_gerente',
+        'action_form': 'sistema:login',
+        'criar_funcionario': 'sistema:cadastrar_funcionario',
         'criar_gerente': 'sistema:cadastrar_gerente',
         'memu_link_str': 'memu_home',
     }
@@ -54,11 +35,6 @@ def login_gerente(request):
     )
 
 
-def logout_gerente(request):
+def logout(request):
     auth.logout(request)
-    return redirect('sistema:login_gerente')
-
-
-def logout_funcionario(request):
-    auth.logout(request)
-    return redirect('sistema:login_funcionario')
+    return redirect('sistema:login')
