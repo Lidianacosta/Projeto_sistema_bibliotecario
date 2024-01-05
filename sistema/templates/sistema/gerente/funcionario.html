@@ -20,7 +20,7 @@
         </ul> 
         <form action="{% url acao_link funcionario.id  %}" method="post">
                 {% csrf_token %}
-                <input type="submit" value={{acao_label}}>
+                <input type="submit" value="{{acao_label}}">
         </form>
 {% endblock content %}
 

@@ -1,13 +1,13 @@
 from django.shortcuts import redirect
 from django.views.generic import ListView, DetailView
-from django.contrib.auth.mixins import PermissionRequiredMixin
-from rolepermissions.roles import assign_role
-from rolepermissions.mixins import HasRoleMixin
 from sistema.models import Funcionario
 from .funcionario_views.emprestimo_views import PER_PAGE
+from rolepermissions.roles import assign_role
+from rolepermissions.mixins import HasRoleMixin
+from django.urls import reverse_lazy
 
 GRUPO = 'gerente'
-LOGIN_URL = 'sistema:login'
+LOGIN_URL = reverse_lazy('sistema:login')
 
 
 class SolicitacoesFuncionarioListView(HasRoleMixin, ListView):
@@ -19,7 +19,7 @@ class SolicitacoesFuncionarioListView(HasRoleMixin, ListView):
 
     def get_queryset(self):
         return super().get_queryset()\
-            .filter(habilitado=False).order_by("nome_completo")
+            .filter(habilitado=False).order_by("user__full_name")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -57,7 +57,7 @@ class AprovarFuncionarioDetailView(HasRoleMixin, DetailView):
         return redirect('sistema:solicitacoes')
 
 
-class FuncionarioListView(PermissionRequiredMixin, ListView):
+class FuncionarioListView(HasRoleMixin, ListView):
     allowed_roles = GRUPO
     redirect_to_login = LOGIN_URL
     model = Funcionario
@@ -66,7 +66,7 @@ class FuncionarioListView(PermissionRequiredMixin, ListView):
 
     def get_queryset(self):
         return super().get_queryset()\
-            .filter(habilitado=True).order_by("nome_completo")
+            .filter(habilitado=True).order_by("user__full_name")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

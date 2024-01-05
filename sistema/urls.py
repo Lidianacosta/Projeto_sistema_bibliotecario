@@ -114,6 +114,7 @@ urlpatterns = [
 
     path('cadastrar-funcionario/', views.FuncionarioFormView.as_view(),
          name='cadastrar_funcionario'),
+
     path('cadastrar-gerente/', views.GerenteFormView.as_view(),
          name='cadastrar_gerente'),
 
@@ -121,7 +122,7 @@ urlpatterns = [
          views.UsuarioFormView.as_view(), name='cadastrar_usuario'),
 
     path('cadastrar-livro/',
-         views.LivroFormView.as_view(), name='cadastrar_livro'),
+         views.LivroCreateView.as_view(), name='cadastrar_livro'),
 
     path('ver-usuarios/',
          views.UsuarioListView.as_view(), name='ver_usuarios'),

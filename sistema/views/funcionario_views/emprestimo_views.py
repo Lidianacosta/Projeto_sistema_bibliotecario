@@ -1,12 +1,15 @@
 from datetime import date
-from rolepermissions.mixins import HasRoleMixin
-from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import ListView, DetailView
+from django.contrib.auth import authenticate
+from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse_lazy
 from django.contrib import messages
-from sistema.models import Emprestimo, Livro, Usuario
+from rolepermissions.mixins import HasRoleMixin
+from sistema.models import Emprestimo, Livro
+
 
 GRUPO = 'funcionario'
-LOGIN_URL = 'sistema:login'
+LOGIN_URL = reverse_lazy('sistema:login')
 
 PER_PAGE = 4
 
@@ -51,25 +54,22 @@ class LivroEmprestarDetailView(HasRoleMixin, DetailView):
         cpf = request.POST.get('cpf', '')
         senha = request.POST.get('senha', '')
 
-        try:
-            usuario = Usuario.objects.get(cpf=cpf, senha=senha)
-        except Usuario.DoesNotExist:
+        user = authenticate(cpf=cpf, password=senha)
+        if not user:
             messages.info(request, "Usuario não encontrado")
             return self.get(request, *args, **kwargs)
 
         emprestimo = Emprestimo()
         emprestimo.user_cpf = cpf
-        emprestimo.user_name = usuario.nome_completo
+        emprestimo.user_name = user.full_name
         emprestimo.emprestimo_data = date.today()
-        emprestimo.livro_info = self.get_object().pk
+        emprestimo.livro_info = self.get_object()
         emprestimo.livro_info.emprestado = True
         emprestimo.livro_info.save()
         emprestimo.save()
 
         return redirect('sistema:livros_emprestar')
 
-
-# emprestimo
 
 class EmprestimoListView(HasRoleMixin, ListView):
     allowed_roles = GRUPO

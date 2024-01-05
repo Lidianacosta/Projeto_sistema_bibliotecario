@@ -1,10 +1,12 @@
 from django.shortcuts import redirect
 from django.views.generic import ListView, DetailView
+from django.urls import reverse_lazy
 from rolepermissions.mixins import HasRoleMixin
 from sistema.models import Usuario, Emprestimo
 from .emprestimo_views import PER_PAGE, LivroListView, LivroEmprestarDetailView
 
-LOGIN_URL = 'sistema:login'
+
+LOGIN_URL = reverse_lazy('sistema:login')
 
 
 class ExcluirLivroListView(LivroListView):
@@ -47,7 +49,7 @@ class UsuarioListView(HasRoleMixin, ListView):
             for e in Emprestimo.objects.filter(devolucao_data=None)
         }
         return super().get_queryset()\
-            .exclude(cpf__in=cpfs_with_loans).order_by("nome_completo")
+            .exclude(user__cpf__in=cpfs_with_loans).order_by("user__full_name")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
